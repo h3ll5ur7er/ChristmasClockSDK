@@ -1,0 +1,5 @@
+add_subdirectory(ir)
+add_subdirectory(led)
+add_subdirectory(lna)
+add_subdirectory(power)
+add_subdirectory(touch)
