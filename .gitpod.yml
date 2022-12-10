@@ -1,0 +1,13 @@
+tasks:
+  - name: Setup environment
+    init: >
+      sudo apt update &&
+      sudo apt install cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential -y &&
+      export PICO_SDK_FETCH_FROM_GIT=true &&
+      mkdir --parent ./build &&
+      cd build/ &&
+      cmake .. &&
+      cmake --build . &&
+      cd ..
+
+
