@@ -1,5 +1,9 @@
 # Christmas Clock
 
+## Gitpod
+
+When starting in gitpod, the environment is automatically prepared. All required packages are installed and the raspberry pi pico sdk is cloned from the git master branch.
+
 ## SDK Setup
 
 Install the following packages to cross compile for the RP2040:
