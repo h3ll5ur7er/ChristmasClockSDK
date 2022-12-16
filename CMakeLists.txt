@@ -11,4 +11,4 @@ pico_sdk_init()
 
 add_subdirectory(drivers)
 add_subdirectory(app)
-
+pico_enable_stdio_usb(ChristmasClock 1)
