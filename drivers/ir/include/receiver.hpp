@@ -10,6 +10,8 @@
 #include "pico/stdlib.h"
 #include "hardware/pio.h"
 
+#include "nec_message.hpp"
+
 namespace ChristmasClock {
 
 // class which decodes IR signals in the NEC protocol
@@ -23,13 +25,15 @@ public:
     //          input_pin: pin at which the ir signal is received
     int init(PIO pio, uint inputPin);
 
-    // brief    decode a infrared frame using
-    // note     supports the (non-extended) NEC protocol
-    // input    frame: raw data
-    //          p_address: pointer where to write the address of the received frame
-    //          p_data: pointer where to write the data of the received frame
-    // return   ture if frame is valid
-    //          otherwise false
-    bool decode_nec_frame(uint32_t frame, uint8_t *p_address, uint8_t *p_data);
+    // brief    update message from ir recevier
+    // output   message: place to store the new message
+    // return   True, if new message is available
+    bool update(NEC_Message* message);
+private:
+    PIO m_pio;
+    uint m_inputPin = 0;
+    uint m_offset = 0;
+    int m_stateMachine = -1;
+
 };
 }

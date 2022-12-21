@@ -7,6 +7,7 @@ pico_generate_pio_header(${DRIVER_NAME} ${CMAKE_CURRENT_LIST_DIR}/src/nec_receiv
 target_sources(${DRIVER_NAME} INTERFACE
   ${CMAKE_CURRENT_LIST_DIR}/src/receiver.cpp
   ${CMAKE_CURRENT_LIST_DIR}/src/sender.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/src/nec_message.cpp
 )
 
 # Pull in pico libraries that we need
