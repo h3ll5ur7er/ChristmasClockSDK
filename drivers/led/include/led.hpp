@@ -9,19 +9,14 @@
 #include "hardware/pio.h"
 #include "hardware/clocks.h"
 #include "led.pio.h"
+#include "led_setup.hpp"
 #include "color.hpp"
 
-const uint32_t LED_PIN = 16;
-const uint32_t NUM_LED = 15;
-const uint32_t LED_FREQUENCY_HZ = 800 * 1000;
-const uint32_t LED_BITS_PER_PIXEL = 24;
-// const uint32_t NUM_LED = 142;
-
 namespace ChristmasClock {
-class DisplaySevenSegment {
+class LED {
 public:
-    DisplaySevenSegment() = default;
-    ~DisplaySevenSegment() = default;
+    LED(PIO pio);
+    ~LED() = default;
     Color& operator[](uint32_t index);
     void init();
     void clear();
@@ -29,6 +24,5 @@ public:
 private:
     PIO pio_;
     Color pixels_[NUM_LED] = {0};
-    int n_;
 };
 }

@@ -1,16 +1,18 @@
 #pragma once
 
 #include "led.hpp"
+#include "led_dma.hpp"
 
 namespace ChristmasClock {
 class ChristmasClock {
 public:
-    ChristmasClock() = default;
+    ChristmasClock();
     ~ChristmasClock() = default;
     void Init();
     void Update();
 private:
-    DisplaySevenSegment display_;
+    LED led_;
+    // LedDma led_;
     int n_;
 };
 }

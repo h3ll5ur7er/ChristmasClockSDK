@@ -1,21 +1,32 @@
 #include "ChristmasClock.hpp"
+#include <iostream>
+
+ChristmasClock::ChristmasClock::ChristmasClock() :
+    led_(pio0),
+    n_(0) {
+}
 
 void ChristmasClock::ChristmasClock::Init() {
-    display_.init();
-    display_.clear();
-    display_.show();
+    led_.init();
+    led_.clear();
+    led_.show();
 }
 
 void ChristmasClock::ChristmasClock::Update() {
-    display_.clear();
+    std::cout<<"Update"<<std::endl;
+    led_.clear();
+
+    auto segLen = 1;
     
-    if (n_*3 >= NUM_LED) {
+    if (n_*segLen >= NUM_LED) {
         n_ = 0;
     }
-    display_[n_ * 3 + 0] = Color::RED;
-    display_[n_ * 3 + 1] = Color::GREEN;
-    display_[n_ * 3 + 2] = Color::BLUE;
+    led_[n_ * segLen + 0] = Color::WHITE;
+    // led_[n_ * segLen + 1] = Color::WHITE;
+    // led_[n_ * segLen + 2] = Color::GREEN;
+    // led_[n_ * segLen + 3] = Color::WHITE;
+    // led_[n_ * segLen + 4] = Color::BLUE;
     n_++;
 
-    display_.show();
+    led_.show();
 }
