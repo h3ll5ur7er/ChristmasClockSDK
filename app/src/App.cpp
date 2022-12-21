@@ -1,13 +1,21 @@
-#include "AppHdr.hpp"
+#include <stdio.h>
+#include "pico/stdlib.h"
 
-
-void ChristmasClock::ChristmasClock::Init() {
-    Receiver receiver;
-    receiver.SampleDriverFunction();
-}
+#include "ChristmasClock.hpp"
 
 int main() {
+    stdio_init_all(); 
+
     ChristmasClock::ChristmasClock clock;
-    clock.Init();
-    return 0;
+    const int state = clock.init();
+    if(state != 0) {
+        printf("Could not initialize clock\n");
+        return state;
+    }
+    
+    // main loop
+    while(true){
+        clock.update();
+    }
+    return -1;
 }
