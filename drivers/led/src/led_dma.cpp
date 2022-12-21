@@ -34,11 +34,10 @@ void ChristmasClock::LedDma::init() {
     channel_config_set_chain_to(&channel_config, DMA_CB_CHANNEL);
     channel_config_set_irq_quiet(&channel_config, true);
     dma_channel_configure(DMA_CHANNEL, &channel_config, &pio_->txf[sm], NULL, NUM_LED, false);
-    dma_channel_config chain_config = dma_channel_get_default_config(DMA_CB_CHANNEL);
-    dma_channel_configure(DMA_CB_CHANNEL, &chain_config, &dma_channel_hw_addr(DMA_CHANNEL)->al3_read_addr_trig, NULL, 1, false);
-    irq_set_exclusive_handler(DMA_IRQ_0, dma_complete_handler);
-    dma_channel_set_irq0_enabled(DMA_CHANNEL, true);
-    irq_set_enabled(DMA_IRQ_0, true);
+    
+    //irq_set_exclusive_handler(DMA_IRQ_0, dma_complete_handler);
+    dma_channel_set_irq0_enabled(DMA_CHANNEL, false);
+    irq_set_enabled(DMA_IRQ_0, false);
 
 }
 
@@ -48,7 +47,7 @@ void ChristmasClock::LedDma::clear() {
 
 void ChristmasClock::LedDma::show() {
     sem_acquire_blocking(&reset_delay_complete_sem_);
-    dma_channel_hw_addr(DMA_CB_CHANNEL)->al3_read_addr_trig = (uintptr_t) pixels_;
+    dma_channel_hw_addr(DMA_CHANNEL)->al3_read_addr_trig = (uintptr_t) pixels_;
 }
 
 
