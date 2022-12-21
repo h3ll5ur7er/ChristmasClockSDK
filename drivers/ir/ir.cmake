@@ -2,7 +2,8 @@ set(DRIVER_NAME ir)
 add_library(${DRIVER_NAME} INTERFACE)
 
 # invoke pio_asm to assemble the state machine program
-pico_generate_pio_header(${DRIVER_NAME} ${CMAKE_CURRENT_LIST_DIR}/src/nec_receive.pio)
+pico_generate_pio_header(${DRIVER_NAME} ${CMAKE_CURRENT_LIST_DIR}/pio/nec_receive.pio
+  OUTPUT_DIR ${CMAKE_CURRENT_LIST_DIR}/include/generated)
 
 target_sources(${DRIVER_NAME} INTERFACE
   ${CMAKE_CURRENT_LIST_DIR}/src/receiver.cpp
