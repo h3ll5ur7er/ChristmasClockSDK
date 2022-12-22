@@ -1,6 +1,7 @@
 #pragma once
 
 #include "led.hpp"
+#include "bitmap.hpp"
 
 namespace ChristmasClock {
 class ChristmasClock {
@@ -10,7 +11,8 @@ public:
     void Init();
     void Update();
 private:
-    Led led_;
+    Bitmap bmp_;
+    LED led_;
     int n_;
 };
 }
