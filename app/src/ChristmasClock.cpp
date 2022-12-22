@@ -13,7 +13,6 @@ void ChristmasClock::ChristmasClock::Init() {
 }
 
 void ChristmasClock::ChristmasClock::Update() {
-    std::cout<<"Update"<<std::endl;
     led_.clear();
 
     auto segLen = 1;

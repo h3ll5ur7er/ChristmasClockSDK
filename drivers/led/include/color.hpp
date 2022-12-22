@@ -12,9 +12,9 @@ public:
     static Color unpack(uint32_t packed);
     void print() const;
 private:
-    uint8_t b_;
-    uint8_t r_;
     uint8_t g_;
+    uint8_t r_;
+    uint8_t b_;
     uint8_t w_ = 0; //padding
 public:
     const static Color RED;
