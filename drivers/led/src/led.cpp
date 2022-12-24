@@ -3,7 +3,12 @@
 #include <iostream>
 #include <cstring>
 
-#include "led.hpp"
+#include "pico/stdlib.h"
+#include "pico/sem.h"
+#include "hardware/clocks.h"
+#include "hardware/dma.h"
+#include "hardware/irq.h"
+#include "led.pio.h"
 
 namespace ChristmasClock {
 LED::LED(PIO pio):

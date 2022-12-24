@@ -1,5 +1,6 @@
 #include "ChristmasClock.hpp"
 #include <iostream>
+#include "pico/stdlib.h"
 
 void countdown(uint n) {
     for (uint i = 0; i < n; i++) {

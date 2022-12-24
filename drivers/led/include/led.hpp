@@ -1,27 +1,13 @@
 #pragma once
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <cstdint>
-
-#include "pico/stdlib.h"
-#include "pico/sem.h"
-#include "hardware/clocks.h"
-#include "hardware/dma.h"
-#include "hardware/irq.h"
-#include "hardware/pio.h"
-#include "led.pio.h"
 #include "color.hpp"
-
-
-
-
-#pragma once
-
 #include "bitmap.hpp"
+#include "hardware/pio.h"
 
 #include <cstdint>
 #include <vector>
+#include <stdio.h>
+#include <stdlib.h>
 
 namespace ChristmasClock {
 
