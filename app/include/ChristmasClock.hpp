@@ -7,8 +7,6 @@ namespace ChristmasClock {
 class ChristmasClock {
 public:
     ChristmasClock();
-    ~ChristmasClock() = default;
-    void Init();
     void Update();
 private:
     Bitmap bmp_;

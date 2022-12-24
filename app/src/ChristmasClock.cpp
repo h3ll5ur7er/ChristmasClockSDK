@@ -5,10 +5,8 @@
 ChristmasClock::ChristmasClock::ChristmasClock() :
     bmp_(521,13),
     led_(pio0),
-    n_(0) {
-}
-
-void ChristmasClock::ChristmasClock::Init() {
+    n_(0) 
+{
     for (int i = 0; i < bmp_.getWidth(); i++) {
         for (int j = 0; j < bmp_.getHeight(); j++) {
             bmp_.setPixel(i, j, BMP521x13[bmp_.getWidth() * j + i]);
