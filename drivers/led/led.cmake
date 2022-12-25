@@ -6,8 +6,9 @@ pico_generate_pio_header(${DRIVER_NAME} ${CMAKE_CURRENT_LIST_DIR}/pio/${DRIVER_N
 
 target_sources(${DRIVER_NAME} INTERFACE
   ${CMAKE_CURRENT_LIST_DIR}/src/${DRIVER_NAME}.cpp
-  ${CMAKE_CURRENT_LIST_DIR}/src/color.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/src/ColorGRB.cpp
   ${CMAKE_CURRENT_LIST_DIR}/src/bitmap.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/src/LEDvertical.cpp
 )
 
 target_include_directories(${DRIVER_NAME} INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "led.hpp"
+#include "LEDvertical.hpp"
 #include "bitmap.hpp"
 
 namespace ChristmasClock {
@@ -9,8 +10,8 @@ public:
     ChristmasClock();
     void Update();
 private:
-    Bitmap bmp_;
-    LED led_;
-    int n_;
+    Bitmap _bmp;
+    LED _led;
+    int _n;
 };
 }

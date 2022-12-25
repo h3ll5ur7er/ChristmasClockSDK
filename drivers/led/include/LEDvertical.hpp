@@ -11,12 +11,9 @@
 
 namespace ChristmasClock {
 
-class LED {
+class LEDvertical {
 public:
-    static const int SCREEN_WIDTH   = 33;
-    static const int SCREEN_HIGHT   = 13;
-
-    LED(PIO pio);
+    LEDvertical(PIO pio);
 
     void Update(const Bitmap& bmp, int offsetX = 0, int offsetY = 0);
 

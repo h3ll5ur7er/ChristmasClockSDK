@@ -1,21 +1,32 @@
 #include "ChristmasClock.hpp"
-#include "testbmp.hpp"
+#include "ColorGRB.hpp"
 #include <iostream>
 
 ChristmasClock::ChristmasClock::ChristmasClock() :
-    bmp_(521,13),
-    led_(pio0),
-    n_(0) 
+    _bmp(LED::SCREEN_WIDTH *4, LED::SCREEN_HIGHT),
+    _led(pio0),
+    _n(0) 
 {
-    for (int i = 0; i < bmp_.getWidth(); i++) {
-        for (int j = 0; j < bmp_.getHeight(); j++) {
-            bmp_.setPixel(i, j, BMP521x13[bmp_.getWidth() * j + i]);
+    ColorGRB color = 0x0000FF;
+    for(int x = 0; x < (LED::SCREEN_WIDTH *4); x++){
+        for(int y = 0; y < LED::SCREEN_HIGHT; y++){
+            _bmp(x, y) = color;
+            
+            std::cout << " " << color;
+        }
+        color <<= 1;
+        std::cout << std::endl;
+        if(color == 0x00){
+            color = 0x0000FF;
         }
     }
-    std::cout << bmp_ << std::endl;
+
+    std::cout << _bmp << std::endl;
 }
 
 void ChristmasClock::ChristmasClock::Update() {
-    led_.Update(bmp_, n_++);
-    n_%=(521-33);
+    _led.Update(_bmp, _n++);
+    if(_n >= LED::SCREEN_WIDTH *2){
+        _n = 0;
+    }
 }

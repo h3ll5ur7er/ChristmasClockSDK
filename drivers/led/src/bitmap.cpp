@@ -25,12 +25,12 @@ int Bitmap::getHeight() const {
 }
 
 // Get the color of the pixel at (x, y)
-Color Bitmap::getPixel(int x, int y) const{
+ColorGRB Bitmap::getPixel(int x, int y) const{
     return _pixels[y * _width + x];
 }
 
 // Set the color of the pixel at (x, y)
-void Bitmap::setPixel(int x, int y, Color color){
+void Bitmap::setPixel(int x, int y, ColorGRB color){
     _pixels[y * _width + x] = color;
 }
 
@@ -43,7 +43,7 @@ std::ostream& operator<<(std::ostream& os, const Bitmap& bmp) {
     os << "BMP" << bmp._width << "x" << bmp._height << ":";
 
     uint8_t* data = (uint8_t*)bmp._pixels.data();
-    int size = bmp._pixels.size() *sizeof(Color);
+    int size = bmp._pixels.size() *sizeof(ColorGRB);
     unsigned char char_4[4];
 
     int n = 0;
