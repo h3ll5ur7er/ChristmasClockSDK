@@ -10,12 +10,12 @@
 #define BLUE_SHIFT  0
 
 namespace ChristmasClock {
-struct ColorGRB {
+struct ColorBRG {
 public:
-    ColorGRB() = default;
-    ColorGRB(uint8_t r, uint8_t g, uint8_t b);
-    ColorGRB(uint32_t packed);
-    ColorGRB(const ColorGRB& color);
+    ColorBRG() = default;
+    ColorBRG(uint8_t r, uint8_t g, uint8_t b);
+    ColorBRG(uint32_t packed);
+    ColorBRG(const ColorBRG& color);
 
     uint8_t GetRed()   { return (_value & RED_MASK) >> RED_SHIFT; }
     uint8_t GetGreen() { return (_value & GREEN_MASK) >> GREEN_SHIFT; }
@@ -25,22 +25,22 @@ public:
     void Setblue(uint8_t blue)   { _value = (_value & ~BLUE_MASK) | (blue << BLUE_SHIFT); }
 
     operator uint32_t() const { return this->_value; }
-    ColorGRB& operator+=(const ColorGRB& addor) { _value += addor._value; return *this; }
-    ColorGRB& operator<<=(int shift) { _value <<= shift; return *this; }
+    ColorBRG& operator+=(const ColorBRG& addor) { _value += addor._value; return *this; }
+    ColorBRG& operator<<=(int shift) { _value <<= shift; return *this; }
 
-    friend std::ostream& operator<<(std::ostream& os, const ColorGRB& color);
+    friend std::ostream& operator<<(std::ostream& os, const ColorBRG& color);
 
 private:
     uint32_t _value;
 
 public:
-    const static ColorGRB RED;
-    const static ColorGRB GREEN;
-    const static ColorGRB BLUE;
-    const static ColorGRB YELLOW;
-    const static ColorGRB CYAN;
-    const static ColorGRB MAGENTA;
-    const static ColorGRB WHITE;
-    const static ColorGRB BLACK;
+    const static ColorBRG RED;
+    const static ColorBRG GREEN;
+    const static ColorBRG BLUE;
+    const static ColorBRG YELLOW;
+    const static ColorBRG CYAN;
+    const static ColorBRG MAGENTA;
+    const static ColorBRG WHITE;
+    const static ColorBRG BLACK;
 };
 }

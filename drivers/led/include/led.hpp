@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ColorGRB.hpp"
+#include "ColorBRG.hpp"
 #include "bitmap.hpp"
 #include "hardware/pio.h"
 
@@ -19,6 +19,7 @@ public:
     LED(PIO pio);
 
     void Update(const Bitmap& bmp, int offsetX = 0, int offsetY = 0);
+    void SetGain(uint8_t gain);
 
 private:
     static const int LED_PIN = 16;
@@ -35,8 +36,12 @@ private:
 
     const std::vector<uint8_t> snake;
 
-    std::vector<ColorGRB> pixels;
+    std::vector<ColorBRG> pixels;
+    std::vector<ColorBRG> pixels_org;
+
+    uint8_t _gain;
     
     void ExtractPixels(const Bitmap& bmp, int offsetX, int offsetY);
+    void ApplyGain();
 };
 }

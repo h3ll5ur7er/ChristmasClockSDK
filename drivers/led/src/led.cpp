@@ -41,7 +41,9 @@ LED::LED(PIO pio):
             23,                    31,    58,                     66,             95,                       103,     130,                         138,
             24,                    30,    59,                     65,             96,                       102,     131,                         137,
                25, 26, 27, 28, 29,            60, 61, 62, 63, 64,                     97, 98, 99, 100, 101,               132, 133, 134, 135, 136 }),
-    pixels(NUM_LED)
+    pixels(NUM_LED),
+    pixels_org(NUM_LED),
+    _gain(0xFF)
 {   
     int sm = pio_claim_unused_sm(pio, true);
     uint offset = pio_add_program(pio, &led_program);
@@ -66,16 +68,32 @@ void LED::ExtractPixels(const Bitmap& bmp, int offsetX, int offsetY) {
 
     for (auto & l : lines){
         for (auto x : l){
-            pixels[snake[s]] = bmp(offsetX +x, y);
+            pixels_org[snake[s]] = bmp(offsetX +x, y);
             s++;
         }
         y++;
     }
 }
 
+void LED::SetGain(uint8_t gain){
+    _gain = gain;
+}
+
+void LED::ApplyGain(){
+    memset(pixels.data(), 0x00, NUM_LED *sizeof(ColorBRG));
+    for(int n = 0; n < NUM_LED; n++){
+        pixels[n] = pixels_org[n];
+    }
+}
+
 void LED::Update(const Bitmap& bmp, int offsetX, int offsetY) {
     ExtractPixels(bmp, offsetX, offsetY);
     
-    dma_channel_hw_addr(DMA_CHANNEL)->al3_read_addr_trig = (uintptr_t) pixels.data();
+    if(_gain == 0xFF){
+        dma_channel_hw_addr(DMA_CHANNEL)->al3_read_addr_trig = (uintptr_t) pixels_org.data();
+    }else{
+        ApplyGain();
+        dma_channel_hw_addr(DMA_CHANNEL)->al3_read_addr_trig = (uintptr_t) pixels.data();
+    }
 }
 }

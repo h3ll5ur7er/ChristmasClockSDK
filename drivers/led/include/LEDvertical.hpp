@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ColorGRB.hpp"
+#include "ColorBRG.hpp"
 #include "bitmap.hpp"
 #include "hardware/pio.h"
 
@@ -32,7 +32,7 @@ private:
 
     const std::vector<uint8_t> snake;
 
-    std::vector<ColorGRB> pixels;
+    std::vector<ColorBRG> pixels;
     
     void ExtractPixels(const Bitmap& bmp, int offsetX, int offsetY);
 };
