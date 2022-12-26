@@ -83,8 +83,7 @@ void LED::SetGain(uint8_t gain){
 }
 
 void LED::ApplyGain(){
-    std::function<void()> additions[8] = { 
-        std::bind(&LED::Add1, this), 
+    std::function<void()> additions[8] = {
         std::bind(&LED::Add2, this), 
         std::bind(&LED::Add4, this), 
         std::bind(&LED::Add8, this), 
@@ -92,9 +91,9 @@ void LED::ApplyGain(){
         std::bind(&LED::Add32, this), 
         std::bind(&LED::Add64, this), 
         std::bind(&LED::Add128, this) };
-    memset(pixels.data(), 0x00, NUM_LED *sizeof(ColorBRG));
+    memset(pixels.data(), 0x00, NUM_LED *sizeof(ColorGRBa));
 
-    uint32_t gain = _gain;
+    uint32_t gain = _gain >> 1;
     for(int n = 0; n < 8; n++){
         if(gain & 0x01 != 0){
             additions[n]();
@@ -128,37 +127,37 @@ void LED::Add1(){
 }
 void LED::Add2(){
     for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0x808080) >> 7) + 0x010101;
+        pixels[n] += ((pixels_org[n] & 0x80808000) >> 7) + 0x01010100;
     }
 }
 void LED::Add4(){
     for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0xC0C0C0) >> 6) + 0x010101;
+        pixels[n] += ((pixels_org[n] & 0xC0C0C000) >> 6) + 0x01010100;
     }
 }
 void LED::Add8(){
     for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0xE0E0E0) >> 5) + 0x010101;
+        pixels[n] += ((pixels_org[n] & 0xE0E0E000) >> 5) + 0x01010100;
     }
 }
 void LED::Add16(){
     for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0xF0F0F0) >> 4) + 0x010101;
+        pixels[n] += ((pixels_org[n] & 0xF0F0F000) >> 4) + 0x01010100;
     }
 }
 void LED::Add32(){
     for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0xF8F8F8) >> 3) + 0x010101;
+        pixels[n] += ((pixels_org[n] & 0xF8F8F800) >> 3) + 0x01010100;
     }
 }
 void LED::Add64(){
     for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0xFCFCFC) >> 2) + 0x010101;
+        pixels[n] += ((pixels_org[n] & 0xFCFCFC00) >> 2) + 0x01010100;
     }
 }
 void LED::Add128(){
     for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0xFEFEFE) >> 1) + 0x010101;
+        pixels[n] += ((pixels_org[n] & 0xFEFEFE00) >> 1) + 0x01010100;
     }
 }
 
@@ -169,7 +168,7 @@ std::ostream& operator<<(std::ostream& os, const LED& led) {
     if(led._gain == 0xFF){
         data = (uint8_t*)led.pixels_org.data();
     }
-    int size = led.pixels.size() *sizeof(ColorBRG);
+    int size = led.pixels.size() *sizeof(ColorGRBa);
 
     base64::toStream(os, data, size);
 

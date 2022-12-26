@@ -27,12 +27,12 @@ int Bitmap::getHeight() const {
 }
 
 // Get the color of the pixel at (x, y)
-ColorBRG Bitmap::getPixel(int x, int y) const{
+ColorGRBa Bitmap::getPixel(int x, int y) const{
     return _pixels[y * _width + x];
 }
 
 // Set the color of the pixel at (x, y)
-void Bitmap::setPixel(int x, int y, ColorBRG color){
+void Bitmap::setPixel(int x, int y, ColorGRBa color){
     _pixels[y * _width + x] = color;
 }
 
@@ -40,7 +40,7 @@ std::ostream& operator<<(std::ostream& os, const Bitmap& bmp) {
     os << "BMP" << bmp._width << "x" << bmp._height << ":";
 
     uint8_t* data = (uint8_t*)bmp._pixels.data();
-    int size = bmp._pixels.size() *sizeof(ColorBRG);
+    int size = bmp._pixels.size() *sizeof(ColorGRBa);
 
     base64::toStream(os, data, size);
 
