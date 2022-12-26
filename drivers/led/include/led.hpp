@@ -21,6 +21,8 @@ public:
     void Update(const Bitmap& bmp, int offsetX = 0, int offsetY = 0);
     void SetGain(uint8_t gain);
 
+    friend std::ostream& operator<<(std::ostream& os, const LED& led);
+
 private:
     static const int LED_PIN = 16;
     static const int NUM_LED = 142;
@@ -43,5 +45,16 @@ private:
     
     void ExtractPixels(const Bitmap& bmp, int offsetX, int offsetY);
     void ApplyGain();
+
+    int CountOnes(uint8_t data);
+
+    void Add1();
+    void Add2();
+    void Add4();
+    void Add8();
+    void Add16();
+    void Add32();
+    void Add64();
+    void Add128();
 };
 }

@@ -13,5 +13,6 @@ private:
     Bitmap _bmp;
     LED _led;
     int _n;
+    uint8_t _gain;
 };
 }

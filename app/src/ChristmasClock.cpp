@@ -5,17 +5,15 @@
 ChristmasClock::ChristmasClock::ChristmasClock() :
     _bmp(LED::SCREEN_WIDTH *4, LED::SCREEN_HIGHT),
     _led(pio0),
-    _n(0) 
+    _n(0),
+    _gain(0xFF)
 {
     ColorBRG color = 0x0000FF;
     for(int x = 0; x < (LED::SCREEN_WIDTH *4); x++){
         for(int y = 0; y < LED::SCREEN_HIGHT; y++){
             _bmp(x, y) = color;
-            
-            std::cout << " " << color;
         }
         color <<= 1;
-        std::cout << std::endl;
         if(color == 0x00){
             color = 0x0000FF;
         }
@@ -25,7 +23,9 @@ ChristmasClock::ChristmasClock::ChristmasClock() :
 }
 
 void ChristmasClock::ChristmasClock::Update() {
+    _led.SetGain(_gain--);
     _led.Update(_bmp, _n++);
+    std::cout << _led << std::endl;
     if(_n >= LED::SCREEN_WIDTH *2){
         _n = 0;
     }

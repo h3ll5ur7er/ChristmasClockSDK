@@ -20,7 +20,7 @@ int main() {
         auto tick = time_us_32();
         clock.Update();
         auto tock = time_us_32();
-        std::cout << "update took " << tock-tick << "us" << std::endl;
+        std::cout << "STATS(clock.Update):" << tock-tick << std::endl;
         sleep_ms(1000 /10);
     }
     return 0;
