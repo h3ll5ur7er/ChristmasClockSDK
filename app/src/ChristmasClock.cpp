@@ -1,5 +1,5 @@
 #include "ChristmasClock.hpp"
-#include "ColorBRG.hpp"
+#include "ColorGRBa.hpp"
 #include <iostream>
 
 ChristmasClock::ChristmasClock::ChristmasClock() :
@@ -8,14 +8,14 @@ ChristmasClock::ChristmasClock::ChristmasClock() :
     _n(0),
     _gain(0xFF)
 {
-    ColorBRG color = 0x0000FF;
+    ColorGRBa color = 0x0000FF;
     for(int x = 0; x < (LED::SCREEN_WIDTH *4); x++){
         for(int y = 0; y < LED::SCREEN_HIGHT; y++){
             _bmp(x, y) = color;
         }
         color <<= 1;
         if(color == 0x00){
-            color = 0x0000FF;
+            color = 0x000000FF;
         }
     }
 

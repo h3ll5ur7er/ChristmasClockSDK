@@ -48,7 +48,7 @@ static inline void led_program_init(PIO pio, uint sm, uint offset, uint pin, flo
     pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, true);
     pio_sm_config c = led_program_get_default_config(offset);
     sm_config_set_sideset_pins(&c, pin);
-    sm_config_set_out_shift(&c, true, true, bits);
+    sm_config_set_out_shift(&c, false, true, bits);
     sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_TX);
     int cycles_per_bit = led_T1 + led_T2 + led_T3;
     float div = clock_get_hz(clk_sys) / (freq * cycles_per_bit);

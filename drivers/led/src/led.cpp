@@ -10,6 +10,7 @@
 #include "hardware/dma.h"
 #include "hardware/irq.h"
 #include "led.pio.h"
+#include "base64.hpp"
 
 namespace ChristmasClock {
 LED::LED(PIO pio):
@@ -82,8 +83,7 @@ void LED::SetGain(uint8_t gain){
 }
 
 void LED::ApplyGain(){
-    std::function<void()> additions[8] = { 
-        std::bind(&LED::Add1, this), 
+    std::function<void()> additions[8] = {
         std::bind(&LED::Add2, this), 
         std::bind(&LED::Add4, this), 
         std::bind(&LED::Add8, this), 
@@ -91,9 +91,9 @@ void LED::ApplyGain(){
         std::bind(&LED::Add32, this), 
         std::bind(&LED::Add64, this), 
         std::bind(&LED::Add128, this) };
-    memset(pixels.data(), 0x00, NUM_LED *sizeof(ColorBRG));
+    memset(pixels.data(), 0x00, NUM_LED *sizeof(ColorGRBa));
 
-    uint32_t gain = _gain;
+    uint32_t gain = _gain >> 1;
     for(int n = 0; n < 8; n++){
         if(gain & 0x01 != 0){
             additions[n]();
@@ -127,87 +127,50 @@ void LED::Add1(){
 }
 void LED::Add2(){
     for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0x808080) >> 7) + 0x010101;
+        pixels[n] += ((pixels_org[n] & 0x80808000) >> 7) + 0x01010100;
     }
 }
 void LED::Add4(){
     for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0xC0C0C0) >> 6) + 0x010101;
+        pixels[n] += ((pixels_org[n] & 0xC0C0C000) >> 6) + 0x01010100;
     }
 }
 void LED::Add8(){
     for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0xE0E0E0) >> 5) + 0x010101;
+        pixels[n] += ((pixels_org[n] & 0xE0E0E000) >> 5) + 0x01010100;
     }
 }
 void LED::Add16(){
     for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0xF0F0F0) >> 4) + 0x010101;
+        pixels[n] += ((pixels_org[n] & 0xF0F0F000) >> 4) + 0x01010100;
     }
 }
 void LED::Add32(){
     for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0xF8F8F8) >> 3) + 0x010101;
+        pixels[n] += ((pixels_org[n] & 0xF8F8F800) >> 3) + 0x01010100;
     }
 }
 void LED::Add64(){
     for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0xFCFCFC) >> 2) + 0x010101;
+        pixels[n] += ((pixels_org[n] & 0xFCFCFC00) >> 2) + 0x01010100;
     }
 }
 void LED::Add128(){
     for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0xFEFEFE) >> 1) + 0x010101;
+        pixels[n] += ((pixels_org[n] & 0xFEFEFE00) >> 1) + 0x01010100;
     }
 }
 
 std::ostream& operator<<(std::ostream& os, const LED& led) {
-    static const char base64_chars[] =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-      "abcdefghijklmnopqrstuvwxyz"
-      "0123456789+/";
-
     os << "7SEG:";
 
     uint8_t* data = (uint8_t*)led.pixels.data();
     if(led._gain == 0xFF){
         data = (uint8_t*)led.pixels_org.data();
     }
-    int size = led.pixels.size() *sizeof(ColorBRG);
+    int size = led.pixels.size() *sizeof(ColorGRBa);
 
-    unsigned char char_4[4];
-    int n = 0;
-    for( ; (n +3) < size; n += 3){
-        char_4[0] = (data[n +0] & 0xfc) >> 2;
-        char_4[1] = ((data[n +0] & 0x03) << 4) + ((data[n +1] & 0xf0) >> 4);
-        char_4[2] = ((data[n +1] & 0x0f) << 2) + ((data[n +2] & 0xc0) >> 6);
-        char_4[3] = data[n +2] & 0x3f;
-
-        for(int i = 0; i < 4; i++){
-            os << base64_chars[char_4[i]];
-        }
-    }
-
-    if(n < size){
-        unsigned char char_3[3] = {0, 0, 0};
-        int i = 0;
-        for( ; n < size; n++){
-            char_3[i] = data[n];
-            i++;
-        }
-
-        char_4[0] = (char_3[0] & 0xfc) >> 2;
-        char_4[1] = ((char_3[0] & 0x03) << 4) + ((char_3[1] & 0xf0) >> 4);
-        char_4[2] = ((char_3[1] & 0x0f) << 2) + ((char_3[2] & 0xc0) >> 6);
-        char_4[3] = char_3[2] & 0x3f;
-
-        for(int j = 0; j < (i +1); j++){
-            os << base64_chars[char_4[j]];
-        }
-        for( ; i < 3; i++){
-            os << "=";
-        }
-    }
+    base64::toStream(os, data, size);
 
     os << "====";
 
