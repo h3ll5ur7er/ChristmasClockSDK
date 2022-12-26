@@ -11,17 +11,11 @@
 
 namespace ChristmasClock {
 
-class LED {
+class LEDvertical {
 public:
-    static const int SCREEN_WIDTH   = 33;
-    static const int SCREEN_HIGHT   = 13;
-
-    LED(PIO pio);
+    LEDvertical(PIO pio);
 
     void Update(const Bitmap& bmp, int offsetX = 0, int offsetY = 0);
-    void SetGain(uint8_t gain);
-
-    friend std::ostream& operator<<(std::ostream& os, const LED& led);
 
 private:
     static const int LED_PIN = 16;
@@ -39,22 +33,7 @@ private:
     const std::vector<uint8_t> snake;
 
     std::vector<ColorBRG> pixels;
-    std::vector<ColorBRG> pixels_org;
-
-    uint8_t _gain;
     
     void ExtractPixels(const Bitmap& bmp, int offsetX, int offsetY);
-    void ApplyGain();
-
-    int CountOnes(uint8_t data);
-
-    void Add1();
-    void Add2();
-    void Add4();
-    void Add8();
-    void Add16();
-    void Add32();
-    void Add64();
-    void Add128();
 };
 }
