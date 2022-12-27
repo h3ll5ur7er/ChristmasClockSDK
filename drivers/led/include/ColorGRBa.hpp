@@ -27,6 +27,18 @@ public:
     operator uint32_t() const { return this->_value; }
     ColorGRBa& operator+=(const ColorGRBa& addor) { _value += addor._value; return *this; }
     ColorGRBa& operator<<=(int shift) { _value <<= shift; return *this; }
+    ColorGRBa operator*(int multiplikator) const { 
+        uint32_t gb = (_value >> 8) & 0x00FF00FF;
+        uint32_t ra = _value & 0x00FF00FF;
+        multiplikator &= 0xFF;
+        gb += 0x00010001;
+        ra += 0x00010001;
+        gb *= multiplikator;
+        ra *= multiplikator;
+        gb &= 0xFF00FF00;
+        ra &= 0xFF00FF00;
+        return gb | (ra >> 8);
+     }
 
     friend std::ostream& operator<<(std::ostream& os, const ColorGRBa& color);
 
