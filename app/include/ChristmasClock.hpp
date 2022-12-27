@@ -2,16 +2,18 @@
 
 #include "led.hpp"
 #include "LEDvertical.hpp"
-#include "bitmap.hpp"
+#include "SevenSeg.hpp"
 
 namespace ChristmasClock {
 class ChristmasClock {
 public:
     ChristmasClock();
     void Update();
+
 private:
-    Bitmap _bmp;
     LED _led;
+    SevenSeg _seg;
+
     int _n;
     uint8_t _gain;
 };
