@@ -45,16 +45,5 @@ private:
     
     void ExtractPixels(const Bitmap& bmp, int offsetX, int offsetY);
     void ApplyGain();
-
-    int CountOnes(uint8_t data);
-
-    void Add1();
-    void Add2();
-    void Add4();
-    void Add8();
-    void Add16();
-    void Add32();
-    void Add64();
-    void Add128();
 };
 }

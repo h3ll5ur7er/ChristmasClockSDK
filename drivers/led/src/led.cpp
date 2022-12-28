@@ -83,30 +83,9 @@ void LED::SetGain(uint8_t gain){
 }
 
 void LED::ApplyGain(){
-    std::function<void()> additions[8] = {
-        std::bind(&LED::Add2, this), 
-        std::bind(&LED::Add4, this), 
-        std::bind(&LED::Add8, this), 
-        std::bind(&LED::Add16, this), 
-        std::bind(&LED::Add32, this), 
-        std::bind(&LED::Add64, this), 
-        std::bind(&LED::Add128, this) };
-    memset(pixels.data(), 0x00, NUM_LED *sizeof(ColorGRBa));
-
-    uint32_t gain = _gain >> 1;
-    for(int n = 0; n < 8; n++){
-        if(gain & 0x01 != 0){
-            additions[n]();
-        }
-        gain >>= 1;
+    for(int n = 0; n < NUM_LED; n++){
+        pixels[n] = pixels_org[n] *_gain;
     }
-}
-
-int LED::CountOnes(uint8_t data){
-    //                0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
-    int count[16] = { 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4 };
-    
-    return count[data & 0x0F] +count[data >> 4];
 }
 
 void LED::Update(const Bitmap& bmp, int offsetX, int offsetY) {
@@ -117,47 +96,6 @@ void LED::Update(const Bitmap& bmp, int offsetX, int offsetY) {
     }else{
         ApplyGain();
         dma_channel_hw_addr(DMA_CHANNEL)->al3_read_addr_trig = (uintptr_t) pixels.data();
-    }
-}
-
-void LED::Add1(){
-    for(auto& x : pixels){
-        x += 0x010101;
-    }
-}
-void LED::Add2(){
-    for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0x80808000) >> 7) + 0x01010100;
-    }
-}
-void LED::Add4(){
-    for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0xC0C0C000) >> 6) + 0x01010100;
-    }
-}
-void LED::Add8(){
-    for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0xE0E0E000) >> 5) + 0x01010100;
-    }
-}
-void LED::Add16(){
-    for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0xF0F0F000) >> 4) + 0x01010100;
-    }
-}
-void LED::Add32(){
-    for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0xF8F8F800) >> 3) + 0x01010100;
-    }
-}
-void LED::Add64(){
-    for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0xFCFCFC00) >> 2) + 0x01010100;
-    }
-}
-void LED::Add128(){
-    for(int n = 0; n < NUM_LED; n++){
-        pixels[n] += ((pixels_org[n] & 0xFEFEFE00) >> 1) + 0x01010100;
     }
 }
 
