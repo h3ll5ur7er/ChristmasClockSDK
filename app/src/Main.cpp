@@ -21,7 +21,7 @@ int main() {
         clock.Update();
         auto tock = time_us_32();
         std::cout << "STATS(clock.Update):" << tock-tick << std::endl;
-        sleep_ms(1000 /10);
+        sleep_ms(1000);
     }
     return 0;
 }
