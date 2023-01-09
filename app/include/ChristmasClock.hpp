@@ -14,7 +14,7 @@ private:
     LED _led;
     SevenSeg _seg;
 
-    int _n;
-    uint8_t _gain;
+    std::time_t _time;
+    int _delay;
 };
 }

@@ -4,6 +4,7 @@
 #include "ColorGRBa.hpp"
 #include <memory>
 #include <cstdint>
+#include <ctime>
 
 namespace ChristmasClock {
 
@@ -19,8 +20,11 @@ public:
     void SetDigit4(int number) { SetDigit(3, number); }
 
     void SetDigit(int position, int number);
+    void ClearDigit(int position);
 
-    void SetNumber(int number);
+    void SetNumber(int number, int minimal = 0);
+    void SetBCDNumber(int number, int minimal = 0);
+    void SetTime(std::time_t t);
 
     void SetPoint();
     void SetDoublePoint();
@@ -36,6 +40,7 @@ public:
 private:
     LED& _led;
     Bitmap _bmp;
+    bool _draw_leading_zero;
 
     ColorGRBa _foreground;
     ColorGRBa _background;
