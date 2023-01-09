@@ -1,0 +1,46 @@
+.program transmit
+.side_set 1
+
+.define public cycles 14
+
+.wrap_target
+do_one_first:
+    out x, 1                       side 0 ;
+    set y, (cycles -2)             side 1 ;
+do_one_first_loop:
+    nop                            side 0 ; 
+    jmp y-- do_one_first_loop      side 1 ;
+    nop                            side 0 [cycles] ; Because of the side bit the delay must be below 16
+    jmp !x do_one_first            side 0 [cycles -1] ;
+
+do_zero_first:
+    nop                            side 0 [cycles] ;
+    set y, (cycles -2)             side 0 [cycles -1] ;
+do_zero_fisrt_loop:
+    nop                            side 0 ;
+    jmp y-- do_zero_fisrt_loop     side 1 ;
+    out x, 1                       side 0 ;
+    jmp !x do_zero_first           side 1 ;
+.wrap
+
+% c-sdk {
+#include "hardware/clocks.h"
+
+static inline void transmit_program_init(PIO pio, uint sm, uint offset, uint pin, float freq) {
+
+    pio_gpio_init(pio, pin);
+    pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, true);
+
+    pio_sm_config c = transmit_program_get_default_config(offset);
+    sm_config_set_sideset_pins(&c, pin);
+    sm_config_set_out_shift(&c, true, true, 32);
+    sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_TX);
+
+    int cycles_per_bit = 2;
+    float div = clock_get_hz(clk_sys) / (freq * cycles_per_bit);
+    sm_config_set_clkdiv(&c, div);
+
+    pio_sm_init(pio, sm, offset, &c);
+    pio_sm_set_enabled(pio, sm, true);
+}
+%}
