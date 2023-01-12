@@ -28,7 +28,7 @@ const uint8_t SevenSeg::_seg6Y[5] = { 6, 6, 6, 6, 6 };
 const uint8_t* SevenSeg::_segmentsX[7] = { _seg0X, _seg1X, _seg2X, _seg3X, _seg4X, _seg5X, _seg6X };
 const uint8_t* SevenSeg::_segmentsY[7] = { _seg0Y, _seg1Y, _seg2Y, _seg3Y, _seg4Y, _seg5Y, _seg6Y };
 
-//                                0     1     2     3     4     5     6     7     8     9     A     b     C     d     E     F
+//                                           0     1     2     3     4     5     6     7     8     9     A     b     C     d     E     F
 const uint8_t SevenSeg::_bcdDecode[16] = { 0x7E, 0x30, 0x6D, 0x79, 0x33, 0x5B, 0x5F, 0x70, 0x7F, 0x7B, 0x77, 0x1F, 0x4E, 0x3D, 0x4F, 0x47 };
 
 SevenSeg::SevenSeg(LED& led, ColorGRBa color, ColorGRBa background) :
