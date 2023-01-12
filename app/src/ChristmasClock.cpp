@@ -5,6 +5,7 @@
 ChristmasClock::ChristmasClock::ChristmasClock() :
     _led(pio0),
     _seg(_led),
+    //_tx(pio0),
     _time(180),
     _delay(5)
 {
@@ -20,6 +21,7 @@ void ChristmasClock::ChristmasClock::Update() {
         _seg.SetForeground(ColorGRBa::RED);
     }
     _seg.SetTime(_time);
+    //_tx.Transmit(_time);
     _seg.Update();
 
     if(_time == 0){
