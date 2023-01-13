@@ -14,7 +14,7 @@ public:
 private:
     LED _led;
     SevenSeg _seg;
-    //Transmitter _tx;
+    Transmitter _tx;
 
     std::time_t _time;
     int _delay;

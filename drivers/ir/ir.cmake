@@ -6,6 +6,7 @@ pico_generate_pio_header(${DRIVER_NAME} ${CMAKE_CURRENT_LIST_DIR}/pio/transmit.p
 target_sources(${DRIVER_NAME} INTERFACE
   ${CMAKE_CURRENT_LIST_DIR}/src/receiver.cpp
   ${CMAKE_CURRENT_LIST_DIR}/src/Transmitter.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/src/IRErrorCorrection.cpp
 )
 
 target_include_directories(${DRIVER_NAME} INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)

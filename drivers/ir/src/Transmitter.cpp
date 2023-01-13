@@ -3,6 +3,7 @@
 #include "pico/stdlib.h"
 #include "hardware/clocks.h"
 #include "transmit.pio.h"
+#include "IRErrorCorrection.hpp"
 
 #include <iostream>
 
@@ -17,7 +18,7 @@ Transmitter::Transmitter(PIO pio):
 }
 
 void Transmitter::Transmit(uint32_t data){
-    _pio->txf[_sm] = data;
+    _pio->txf[_sm] = IRErrorCorrection::EncodeMessage(data);
 }
 
 }

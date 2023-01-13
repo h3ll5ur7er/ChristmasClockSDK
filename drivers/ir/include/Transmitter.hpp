@@ -14,5 +14,7 @@ private:
     static const int IR_PIN = 12;
     PIO _pio;
     int _sm;
+
+    static uint32_t CalculateParities(uint32_t data);
 };
 }
