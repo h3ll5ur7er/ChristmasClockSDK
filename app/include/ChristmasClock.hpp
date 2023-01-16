@@ -10,6 +10,7 @@ class ChristmasClock {
 public:
     ChristmasClock();
     void Update();
+    int StartupChecks();
 
 private:
     LED _led;

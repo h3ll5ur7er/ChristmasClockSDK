@@ -41,9 +41,9 @@ uint32_t IRErrorCorrection::AddParityBits(uint32_t data){
     auto h5 = h4 ^ (h4 << 4);
 
     auto P1 = h5 ^(h5 << 2);
-    data |= (P1 & (0x01 << 14)) << 14;
+    data |= (P1 & (0x01 << 14)) << 16;
 
-    auto P4_8_16 = P1 ^(P1 << 1);
+    auto P4_8_16 = P1 ^ (P1 << 1);
     data |= (P4_8_16 & (0x01 << 31)) >> 4;
     data |= (P4_8_16 & (0x01 << 23));
     data |= (P4_8_16 & (0x01 << 7)) << 8;

@@ -16,6 +16,10 @@ int main() {
     
     ChristmasClock::ChristmasClock clock;
 
+    int err = clock.StartupChecks();
+
+    while (err != 0) { sleep_ms(1000); }
+
     int next_update = 0;
     while (true) {
         auto tick = time_us_32();
