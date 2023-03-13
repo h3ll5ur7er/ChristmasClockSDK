@@ -6,7 +6,7 @@
 .wrap_target
 do_one_first:
     out x, 1                       side 0 ;
-    set y, (cycles -2)             side 1 ;
+    set y, (cycles -4)             side 1 ;
 do_one_first_loop:
     nop                            side 0 ; 
     jmp y-- do_one_first_loop      side 1 ;
@@ -15,7 +15,7 @@ do_one_first_loop:
 
 do_zero_first:
     nop                            side 0 [cycles] ;
-    set y, (cycles -2)             side 0 [cycles -1] ;
+    set y, (cycles -4)             side 0 [cycles -1] ;
 do_zero_fisrt_loop:
     nop                            side 0 ;
     jmp y-- do_zero_fisrt_loop     side 1 ;

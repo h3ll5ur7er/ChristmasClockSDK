@@ -20,13 +20,13 @@
 static const uint16_t transmit_program_instructions[] = {
             //     .wrap_target
     0x6021, //  0: out    x, 1            side 0     
-    0xf04c, //  1: set    y, 12           side 1     
+    0xf04a, //  1: set    y, 10           side 1     
     0xa042, //  2: nop                    side 0     
     0x1082, //  3: jmp    y--, 2          side 1     
     0xae42, //  4: nop                    side 0 [14]
     0x0d20, //  5: jmp    !x, 0           side 0 [13]
     0xae42, //  6: nop                    side 0 [14]
-    0xed4c, //  7: set    y, 12           side 0 [13]
+    0xed4a, //  7: set    y, 10           side 0 [13]
     0xa042, //  8: nop                    side 0     
     0x1088, //  9: jmp    y--, 8          side 1     
     0x6021, // 10: out    x, 1            side 0     
