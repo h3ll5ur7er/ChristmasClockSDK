@@ -92,30 +92,65 @@ uint32_t IRErrorCorrection::DifferentialEncoding(uint32_t data){
         auto tmp = output << 3;
         output <<= 4;
         tmp += data >> ((7 -n) *4);
-        tmp &= 0x000F;
-        output |= (uint32_t)start_zero[tmp];
+        output |= (uint32_t)start_zero[tmp & 0x000F];
     }
 
     return output;
 }
 
+// An alternative Method to adchieve the same without addition but it takes 4 more commands for some reason
+//uint32_t IRErrorCorrection::DifferentialEncoding_new(uint32_t data){
+//    //                                     0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15
+//    static const uint8_t start_zero[] = { /* last bit in stream was 0: */
+//                                           0,  1,  3,  2,  7,  6,  4,  5, 15, 14, 12, 13,  8,  9, 11, 10,
+//                                          /* last bit in stream was 1: */ 
+//                                          15, 14, 12, 13,  8,  9, 11, 10,  0,  1,  3,  2,  7,  6,  4,  5 };
+//
+//    uint32_t output = 0;
+//    for(int n = 0; n < 8; n++){
+//        output <<= 4;
+//        auto tmp = output | ((data >> ((7 -n) *4)) & 0x000F);
+//        output |= (uint32_t)start_zero[tmp & 0x001F];
+//    }
+//
+//    return output;
+//}
+
 uint32_t IRErrorCorrection::DifferentialDecoding(uint32_t data){
     //                                     0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15
-    static const uint8_t start_zero[] = {  0,  1,  3,  2,  6,  7,  5,  4, 12, 13, 15, 14, 10, 11,  9,  8 };
-    static const uint8_t start_one[]  = {  8,  9, 11, 10, 14, 15, 13, 12,  4,  5,  7,  6,  2,  3,  1,  0 };
+    static const uint8_t start_zero[] = { /* last bit in stream was 0: */
+                                           0,  1,  3,  2,  6,  7,  5,  4, 12, 13, 15, 14, 10, 11,  9,  8,
+                                          /* last bit in stream was 1: */
+                                           8,  9, 11, 10, 14, 15, 13, 12,  4,  5,  7,  6,  2,  3,  1,  0 };
 
     uint32_t output = 0;
     for(int n = 0; n < 8; n++){
         output <<= 4;
         auto tmp = data >> ((7 -n) *4);
-        if((tmp & 0x0010) == 0){
-            output |= (uint32_t)start_zero[tmp & 0x000F];
-        }else{
-            output |= (uint32_t)start_one[tmp & 0x000F];
-        }
+        output |= (uint32_t)start_zero[tmp & 0x001F];
     }
 
     return output;
 }
+
+// An alternative method to adchieve the same thing
+//uint32_t IRErrorCorrection::DifferentialDecoding(uint32_t data){
+//    //                                     0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15
+//    static const uint8_t start_zero[] = {  0,  1,  3,  2,  6,  7,  5,  4, 12, 13, 15, 14, 10, 11,  9,  8 };
+//    static const uint8_t start_one[]  = {  8,  9, 11, 10, 14, 15, 13, 12,  4,  5,  7,  6,  2,  3,  1,  0 };
+//
+//    uint32_t output = 0;
+//    for(int n = 0; n < 8; n++){
+//        output <<= 4;
+//        auto tmp = data >> ((7 -n) *4);
+//        if((tmp & 0x0010) == 0){
+//            output |= (uint32_t)start_zero[tmp & 0x000F];
+//        }else{
+//            output |= (uint32_t)start_one[tmp & 0x000F];
+//        }
+//    }
+//
+//    return output;
+//}
 
 }

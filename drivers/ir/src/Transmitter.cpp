@@ -23,7 +23,7 @@ bool Transmitter::Transmit(uint32_t data){
     }
     auto tmp = IRErrorCorrection::EncodeMessage(data);
     pio_sm_put(_pio, _sm, tmp);
-    std::cout << "Sending Data: 0x" << std::hex << std::setfill('0') << std::setw(8) << data << " encoded to: 0x" << std::setfill('0') << std::setw(8) << tmp << std::endl;
+    std::cout << "Sending Data: 0x" << std::hex << std::setfill('0') << std::setw(8) << IRErrorCorrection::DifferentialEncoding(tmp) << " encoded from: 0x" << std::setfill('0') << std::setw(8) << data << std::endl;
     return true;
 }
 

@@ -13,38 +13,37 @@
 // ------- //
 
 #define receive_wrap_target 0
-#define receive_wrap 16
+#define receive_wrap 15
 
 static const uint16_t receive_program_instructions[] = {
             //     .wrap_target
-    0xe020, //  0: set    x, 0            side 0     
-    0xa029, //  1: mov    x, !x           side 0     
-    0xa0c3, //  2: mov    isr, null       side 0     
-    0x3020, //  3: wait   0 pin, 0        side 2     
-    0x4801, //  4: in     pins, 1         side 1     
-    0x10c8, //  5: jmp    pin, 8          side 2     
-    0x0045, //  6: jmp    x--, 5          side 0     
-    0x0000, //  7: jmp    0               side 0     
-    0xa049, //  8: mov    y, !x           side 0     
-    0x4040, //  9: in     y, 32           side 0     
-    0xa022, // 10: mov    x, y            side 0     
-    0x024b, // 11: jmp    x--, 11         side 0 [2] 
-    0x4801, // 12: in     pins, 1         side 1     
-    0xa022, // 13: mov    x, y            side 0     
-    0x10d1, // 14: jmp    pin, 17         side 2     
-    0x10ca, // 15: jmp    pin, 10         side 2     
-    0x004f, // 16: jmp    x--, 15         side 0     
+    0xa02b, //  0: mov    x, !null        side 0     
+    0xa0c3, //  1: mov    isr, null       side 0     
+    0x3020, //  2: wait   0 pin, 0        side 2     
+    0x4801, //  3: in     pins, 1         side 1     
+    0x10c7, //  4: jmp    pin, 7          side 2     
+    0x0044, //  5: jmp    x--, 4          side 0     
+    0x0000, //  6: jmp    0               side 0     
+    0xa049, //  7: mov    y, !x           side 0     
+    0x4040, //  8: in     y, 32           side 0     
+    0xa022, //  9: mov    x, y            side 0     
+    0x024a, // 10: jmp    x--, 10         side 0 [2] 
+    0x4801, // 11: in     pins, 1         side 1     
+    0xa022, // 12: mov    x, y            side 0     
+    0x10d0, // 13: jmp    pin, 16         side 2     
+    0x10c9, // 14: jmp    pin, 9          side 2     
+    0x004e, // 15: jmp    x--, 14         side 0     
             //     .wrap
-    0x0053, // 17: jmp    x--, 19         side 0     
-    0x0000, // 18: jmp    0               side 0     
-    0x10d1, // 19: jmp    pin, 17         side 2     
-    0x000a, // 20: jmp    10              side 0     
+    0x0052, // 16: jmp    x--, 18         side 0     
+    0x0000, // 17: jmp    0               side 0     
+    0x10d0, // 18: jmp    pin, 16         side 2     
+    0x0009, // 19: jmp    9               side 0     
 };
 
 #if !PICO_NO_HARDWARE
 static const struct pio_program receive_program = {
     .instructions = receive_program_instructions,
-    .length = 21,
+    .length = 20,
     .origin = -1,
 };
 
