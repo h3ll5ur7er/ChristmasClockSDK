@@ -33,7 +33,7 @@ while(!pio_sm_is_rx_fifo_empty(_pio, _sm)){
     auto recv = pio_sm_get(_pio, _sm);
     ret = IRErrorCorrection::DecodeMessage(recv);
     
-    std::cout << "Receiving Data: 0x" << std::hex << std::setfill('0') << std::setw(8) << recv << " decoded to: 0x" << std::setfill('0') << std::setw(8) << ret << std::endl;
+    std::cout << "Receiving Data: 0x" << std::hex << std::setfill('0') << std::setw(8) << recv << " decoded to:   0x" << std::setfill('0') << std::setw(8) << ret << std::endl;
 }
     return (int32_t)ret;
 }
