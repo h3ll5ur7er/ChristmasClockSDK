@@ -23,10 +23,10 @@ int ChristmasClock::StartupChecks(){
     _seg.SetNumber(count);
     std::cout << "start checking, steps: " << steps << std::endl;
     for(int n = 0; n <= IRErrorCorrection::message_mask; n++){
-        auto tmp = IRErrorCorrection::EncodeMessage(n);
+        auto tmp = IRErrorCorrection::DifferentialEncoding(n);
 
-        if(n != IRErrorCorrection::DecodeMessage(tmp)){
-            std::cout << "error on: " << n << " - encodes to: " << tmp << " decodes to: " << IRErrorCorrection::DecodeMessage(tmp) << std::endl;
+        if(n != IRErrorCorrection::DifferentialDecoding(tmp)){
+            std::cout << "error on: " << n << " - encodes to: " << tmp << " decodes to: " << IRErrorCorrection::DifferentialDecoding(tmp) << std::endl;
             err++;
         }
 
@@ -40,6 +40,7 @@ int ChristmasClock::StartupChecks(){
             }
             _seg.SetNumber(count);
             std::cout << "progress: " << count << std::endl;
+            std::cout << "debug: " << n << " - encodes to: " << tmp << " decodes to: " << IRErrorCorrection::DifferentialDecoding(tmp) << std::endl;
         }
     }
     _seg.SetNumber(err);

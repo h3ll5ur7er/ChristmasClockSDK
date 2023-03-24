@@ -4,14 +4,13 @@
 #include <cstdint>
 
 namespace ChristmasClock {
-class Transmitter {
+class Receiver {
 public:
-    Transmitter(PIO pio);
-
-    bool Transmit(uint32_t data);
+    Receiver(PIO pio);
+    int32_t Receive();
 
 private:
-    static const int IR_PIN = 12;
+    static const int IR_PIN = 13;
     PIO _pio;
     int _sm;
 };
