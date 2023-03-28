@@ -6,8 +6,8 @@
 .define BIT_SAMPLE_DELAY 15 ///342
 
 .wrap_target
-
 manchester_decoding:
+        in y, 32                                  side 0     ; debug
     mov x, !NULL                                  side 0
     mov ISR, NULL                                 side 0
     wait 0 pin 0                                  side 2
@@ -19,7 +19,6 @@ manchester_baud_detect:
 
 manchester_baud_detected:
     mov y, !x                                     side 0
-        in y, 32                                  side 0     ; debug
 
 manchester_wait_for_half_bit:
     mov x, y                                      side 0

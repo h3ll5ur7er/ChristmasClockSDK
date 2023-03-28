@@ -17,15 +17,15 @@
 
 static const uint16_t receive_program_instructions[] = {
             //     .wrap_target
-    0xa02b, //  0: mov    x, !null        side 0     
-    0xa0c3, //  1: mov    isr, null       side 0     
-    0x3020, //  2: wait   0 pin, 0        side 2     
-    0x4801, //  3: in     pins, 1         side 1     
-    0x10c7, //  4: jmp    pin, 7          side 2     
-    0x0044, //  5: jmp    x--, 4          side 0     
-    0x0000, //  6: jmp    0               side 0     
-    0xa049, //  7: mov    y, !x           side 0     
-    0x4040, //  8: in     y, 32           side 0     
+    0x4040, //  0: in     y, 32           side 0     
+    0xa02b, //  1: mov    x, !null        side 0     
+    0xa0c3, //  2: mov    isr, null       side 0     
+    0x3020, //  3: wait   0 pin, 0        side 2     
+    0x4801, //  4: in     pins, 1         side 1     
+    0x10c8, //  5: jmp    pin, 8          side 2     
+    0x0045, //  6: jmp    x--, 5          side 0     
+    0x0000, //  7: jmp    0               side 0     
+    0xa049, //  8: mov    y, !x           side 0     
     0xa022, //  9: mov    x, y            side 0     
     0x024a, // 10: jmp    x--, 10         side 0 [2] 
     0x4801, // 11: in     pins, 1         side 1     
