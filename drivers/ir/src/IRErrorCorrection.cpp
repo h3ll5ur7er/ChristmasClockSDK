@@ -10,7 +10,7 @@ uint32_t IRErrorCorrection::EncodeMessage(uint32_t data){
     data = AddParityBits(data);
     data = AddParityBit0(data);
 
-    return data >> 2;
+    return DifferentialEncoding(data >> 2);
 }
 
 uint32_t IRErrorCorrection::DecodeMessage(uint32_t data){

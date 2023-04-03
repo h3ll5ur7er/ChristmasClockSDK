@@ -12,25 +12,26 @@
 // transmit //
 // -------- //
 
-#define transmit_wrap_target 0
+#define transmit_wrap_target 1
 #define transmit_wrap 11
 
 #define transmit_cycles 14
+#define transmit_cycles_per_bit 3
 
 static const uint16_t transmit_program_instructions[] = {
+    0xa142, //  0: nop                    side 0 [1] 
             //     .wrap_target
-    0x6021, //  0: out    x, 1            side 0     
-    0xf04a, //  1: set    y, 10           side 1     
-    0xa042, //  2: nop                    side 0     
-    0x1082, //  3: jmp    y--, 2          side 1     
-    0xae42, //  4: nop                    side 0 [14]
-    0x0d20, //  5: jmp    !x, 0           side 0 [13]
-    0xae42, //  6: nop                    side 0 [14]
-    0xed4a, //  7: set    y, 10           side 0 [13]
-    0xa042, //  8: nop                    side 0     
-    0x1088, //  9: jmp    y--, 8          side 1     
+    0xe24d, //  1: set    y, 13           side 0 [2] 
+    0xa242, //  2: nop                    side 0 [2] 
+    0x0282, //  3: jmp    y--, 2          side 0 [2] 
+    0x002a, //  4: jmp    !x, 10          side 0     
+    0xa042, //  5: nop                    side 0     
+    0xf24d, //  6: set    y, 13           side 1 [2] 
+    0xa242, //  7: nop                    side 0 [2] 
+    0x1287, //  8: jmp    y--, 7          side 1 [2] 
+    0x0020, //  9: jmp    !x, 0           side 0     
     0x6021, // 10: out    x, 1            side 0     
-    0x1026, // 11: jmp    !x, 6           side 1     
+    0x0026, // 11: jmp    !x, 6           side 0     
             //     .wrap
 };
 
@@ -56,8 +57,7 @@ static inline void transmit_program_init(PIO pio, uint sm, uint offset, uint pin
     sm_config_set_sideset_pins(&c, pin);
     sm_config_set_out_shift(&c, false, true, 32);
     sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_TX);
-    int cycles_per_bit = 2;
-    float div = clock_get_hz(clk_sys) / (freq * cycles_per_bit);
+    float div = clock_get_hz(clk_sys) / (freq *2 *transmit_cycles_per_bit);
     sm_config_set_clkdiv(&c, div);
     pio_sm_init(pio, sm, offset, &c);
     pio_sm_set_enabled(pio, sm, true);
