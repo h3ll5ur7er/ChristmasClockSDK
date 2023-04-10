@@ -22,6 +22,16 @@ cmake -DPICO_SDK_FETCH_FROM_GIT=ON ..
 
 ## Prepare build files (local Pico SDK)
 
+If the SDK is located in ~/pico-sdk the script start-env can be used:
+
+```bash
+. start-env
+```
+
+If the file github-id contains the private key used for your github account the script will start a seperate ssh-agent with only that key.
+
+Otherwise use:
+
 ```bash
 mkdir build
 cd build
