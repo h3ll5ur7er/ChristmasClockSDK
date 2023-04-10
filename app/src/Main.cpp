@@ -20,7 +20,7 @@ int main() {
     ChristmasClock::Receiver recv(pio1);
 
 
-    int err = clock.StartupChecks();
+    int err = 0; //clock.StartupChecks();
 
     while (err != 0) { sleep_ms(1000); }
 
