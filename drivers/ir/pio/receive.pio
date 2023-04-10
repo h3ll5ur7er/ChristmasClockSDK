@@ -1,44 +1,39 @@
 .program receive
-.side_set 2
-
-.define HALF_BIT_LENGTH 20
-.define BURST_LOOP_COUNTER 30 ///684
-.define BIT_SAMPLE_DELAY 15 ///342
 
 .wrap_target
 manchester_decoding:
-    mov x, !NULL                                  side 0
-    mov ISR, NULL                                 side 0
-    wait 0 pin 0                                  side 2
-    in PINS, 1                                    side 1
+    mov x, !NULL                              
+    mov ISR, NULL                             
+    wait 0 pin 0                              
+    in PINS, 1                                
 manchester_baud_detect:
-    jmp pin manchester_baud_detected              side 2
-    jmp x-- manchester_baud_detect                side 0
-    jmp manchester_decoding                       side 0
+    jmp pin manchester_baud_detected          
+    jmp x-- manchester_baud_detect            
+    jmp manchester_decoding                   
 
 manchester_baud_detected:
-    mov y, !x                                     side 0
+    mov y, !x                                 
 
 manchester_wait_for_half_bit:
-    mov x, y                                      side 0
+    mov x, y                                  
 manchester_wait_for_half_bit_loop:
-    jmp x-- manchester_wait_for_half_bit_loop     side 0 [2] ; Wait 3/4 bit
+    jmp x-- manchester_wait_for_half_bit_loop  [2] ; Wait 3/4 bit
     
-    in PINS, 1                                    side 1
+    in PINS, 1                                
 
-    mov x, y                                      side 0
-    jmp pin manchester_resync_1                   side 2
+    mov x, y                                  
+    jmp pin manchester_resync_1               
 manchester_resync_0:
-    jmp pin manchester_wait_for_half_bit          side 2
-    jmp x-- manchester_resync_0                   side 0
-.wrap                                                        ; jmp manchester_decoding
+    jmp pin manchester_wait_for_half_bit      
+    jmp x-- manchester_resync_0               
+.wrap                                              ; jmp manchester_decoding
 
 manchester_resync_1:
-    jmp x-- manchester_resync_1_next              side 0     ; Wait 1/2 bit
-    jmp manchester_decoding                       side 0     ; Abort as the timeout occured
+    jmp x-- manchester_resync_1_next               ; Wait 1/2 bit
+    jmp manchester_decoding                        ; Abort as the timeout occured
 manchester_resync_1_next:
-    jmp pin manchester_resync_1                   side 2     ; abort as the pin must be 0 here
-    jmp manchester_wait_for_half_bit              side 0
+    jmp pin manchester_resync_1                    ; abort as the pin must be 0 here
+    jmp manchester_wait_for_half_bit          
 
 
 
@@ -47,10 +42,9 @@ manchester_resync_1_next:
 #include "stdio.h"
 #include "stdlib.h"
 
-static inline void receive_program_init(PIO pio, uint sm, uint offset, uint pin, uint debug_pins) {
+static inline void receive_program_init(PIO pio, uint sm, uint offset, uint pin) {
 
     pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, false);
-    pio_sm_set_consecutive_pindirs(pio, sm, debug_pins, 2, true);   // Debug pins
 
     pio_sm_config c = receive_program_get_default_config(offset);
     sm_config_set_in_shift(
@@ -62,11 +56,8 @@ static inline void receive_program_init(PIO pio, uint sm, uint offset, uint pin,
     sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_RX);
     sm_config_set_in_pins(&c, pin);
     sm_config_set_jmp_pin(&c, pin);
-    sm_config_set_sideset_pins(&c, debug_pins);                     // Debug pins
     
     pio_gpio_init(pio, pin);
-    pio_gpio_init(pio, debug_pins);
-    pio_gpio_init(pio, debug_pins +1);
 
     sm_config_set_clkdiv(&c, 1);
 

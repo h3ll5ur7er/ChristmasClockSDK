@@ -16,7 +16,7 @@ Receiver::Receiver(PIO pio):
     if(pio_can_add_program(_pio, &receive_program)){
         uint offset = pio_add_program(_pio, &receive_program);
         _sm = pio_claim_unused_sm(_pio, true);
-        receive_program_init(_pio, _sm, offset, IR_PIN, 22);
+        receive_program_init(_pio, _sm, offset, IR_PIN);
     }else{
         std::cout << "Error: unable to start receiver" << std::endl;
     }
