@@ -9,7 +9,7 @@ When starting in gitpod, the environment is automatically prepared. All required
 Install the following packages to cross compile for the RP2040:
 
 ```bash
-sudo apt install cmake gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib
+sudo apt install cmake build-essential gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib
 ```
 
 ## Prepare build files (Pico SDK from git)
