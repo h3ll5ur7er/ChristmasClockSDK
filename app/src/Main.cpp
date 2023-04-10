@@ -6,7 +6,7 @@
 
 void countdown(uint n) {
     for (uint i = 0; i < n; i++) {
-        std::cout<<n-i<<std::endl;
+        std::cout << n -i << std::endl;
         sleep_ms(1000);
     }
 }
@@ -19,22 +19,17 @@ int main() {
     ChristmasClock::ChristmasClock clock;
     ChristmasClock::Receiver recv(pio1);
 
-
-    int err = 0; //clock.StartupChecks();
-
-    while (err != 0) { sleep_ms(1000); }
-
-    int next_update = 0;
+    int next_update = time_us_32();
     while (true) {
         auto tick = time_us_32();
-        if(tick > next_update){
-            recv.Receive();
+        if(tick >= next_update){
             clock.Update();
             auto tock = time_us_32();
             //std::cout << "STATS(clock.Update):" << tock-tick << std::endl;
-            next_update = tick + 1000000;
+            next_update += 1000000;
         }
         sleep_ms(10);
+        recv.Receive();
     }
     return 0;
 }

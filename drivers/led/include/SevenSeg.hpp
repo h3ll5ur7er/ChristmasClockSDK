@@ -26,10 +26,6 @@ public:
     void SetBCDNumber(int number, int minimal = 0);
     void SetTime(std::time_t t);
 
-    void SetPoint();
-    void SetDoublePoint();
-    void ClearPoints();
-
     void SetForeground(ColorGRBa color) { _foreground = color; }
     void SetBackground(ColorGRBa color) { _background = color; }
 
@@ -46,6 +42,13 @@ private:
     ColorGRBa _background;
 
     void setSegment(int number, int offsetX, ColorGRBa color);
+
+    void SetPoint();
+    void SetDoublePoint();
+    void ClearPoints();
+
+    void SetNegative();
+    void ClearNegative();
 
     static const uint8_t _offsets[4];
     static const uint8_t _seg0X[5];

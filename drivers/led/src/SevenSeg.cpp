@@ -42,16 +42,27 @@ SevenSeg::SevenSeg(LED& led, ColorGRBa color, ColorGRBa background) :
 
 void SevenSeg::SetTime(std::time_t t){
     ClearPoints();
-    if(t > 3600){
-        t /= 60;
+
+    auto s = t;
+
+    if(t < 0){
+        s = 0 -t;
+    }
+
+    if(s > 3600){
+        s /= 60;
         SetDoublePoint();
     } else {
         SetPoint();
     }
 
-    std::time_t min = t /60;
-    t = t -min *60;
-    SetNumber(min *100 +t, 3);
+    std::time_t min = s /60;
+    s = s -min *60;
+    SetNumber(min *100 +s, 3);
+
+    if(t < 0 && min < 10){
+        SetNegative();
+    }
 }
 
 void SevenSeg::SetNumber(int number, int minimal){
@@ -107,11 +118,21 @@ void SevenSeg::SetPoint(){
 void SevenSeg::SetDoublePoint(){
     _bmp(16, 6) = _foreground;
     _bmp(16, 9) = _foreground;
-
 }
 void SevenSeg::ClearPoints(){
     _bmp(16, 6) = _background;
     _bmp(16, 9) = _background;
+}
+
+void SevenSeg::SetNegative(){
+    _bmp(2, 6) = _foreground;
+    _bmp(3, 6) = _foreground;
+    _bmp(4, 6) = _foreground;
+}
+void SevenSeg::ClearNegative(){
+    _bmp(2, 6) = _background;
+    _bmp(3, 6) = _background;
+    _bmp(4, 6) = _background;
 }
 
 void SevenSeg::setSegment(int number, int offsetX, ColorGRBa color){
