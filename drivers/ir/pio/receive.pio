@@ -7,7 +7,6 @@
 
 .wrap_target
 manchester_decoding:
-        in y, 32                                  side 0     ; debug
     mov x, !NULL                                  side 0
     mov ISR, NULL                                 side 0
     wait 0 pin 0                                  side 2
@@ -69,7 +68,7 @@ static inline void receive_program_init(PIO pio, uint sm, uint offset, uint pin,
     pio_gpio_init(pio, debug_pins);
     pio_gpio_init(pio, debug_pins +1);
 
-    sm_config_set_clkdiv(&c, 100);
+    sm_config_set_clkdiv(&c, 1);
 
     pio_sm_init(pio, sm, offset, &c);
     pio_sm_set_enabled(pio, sm, true);

@@ -13,37 +13,36 @@
 // ------- //
 
 #define receive_wrap_target 0
-#define receive_wrap 15
+#define receive_wrap 14
 
 static const uint16_t receive_program_instructions[] = {
             //     .wrap_target
-    0x4040, //  0: in     y, 32           side 0     
-    0xa02b, //  1: mov    x, !null        side 0     
-    0xa0c3, //  2: mov    isr, null       side 0     
-    0x3020, //  3: wait   0 pin, 0        side 2     
-    0x4801, //  4: in     pins, 1         side 1     
-    0x10c8, //  5: jmp    pin, 8          side 2     
-    0x0045, //  6: jmp    x--, 5          side 0     
-    0x0000, //  7: jmp    0               side 0     
-    0xa049, //  8: mov    y, !x           side 0     
-    0xa022, //  9: mov    x, y            side 0     
-    0x024a, // 10: jmp    x--, 10         side 0 [2] 
-    0x4801, // 11: in     pins, 1         side 1     
-    0xa022, // 12: mov    x, y            side 0     
-    0x10d0, // 13: jmp    pin, 16         side 2     
-    0x10c9, // 14: jmp    pin, 9          side 2     
-    0x004e, // 15: jmp    x--, 14         side 0     
+    0xa02b, //  0: mov    x, !null        side 0     
+    0xa0c3, //  1: mov    isr, null       side 0     
+    0x3020, //  2: wait   0 pin, 0        side 2     
+    0x4801, //  3: in     pins, 1         side 1     
+    0x10c7, //  4: jmp    pin, 7          side 2     
+    0x0044, //  5: jmp    x--, 4          side 0     
+    0x0000, //  6: jmp    0               side 0     
+    0xa049, //  7: mov    y, !x           side 0     
+    0xa022, //  8: mov    x, y            side 0     
+    0x0249, //  9: jmp    x--, 9          side 0 [2] 
+    0x4801, // 10: in     pins, 1         side 1     
+    0xa022, // 11: mov    x, y            side 0     
+    0x10cf, // 12: jmp    pin, 15         side 2     
+    0x10c8, // 13: jmp    pin, 8          side 2     
+    0x004d, // 14: jmp    x--, 13         side 0     
             //     .wrap
-    0x0052, // 16: jmp    x--, 18         side 0     
-    0x0000, // 17: jmp    0               side 0     
-    0x10d0, // 18: jmp    pin, 16         side 2     
-    0x0009, // 19: jmp    9               side 0     
+    0x0051, // 15: jmp    x--, 17         side 0     
+    0x0000, // 16: jmp    0               side 0     
+    0x10cf, // 17: jmp    pin, 15         side 2     
+    0x0008, // 18: jmp    8               side 0     
 };
 
 #if !PICO_NO_HARDWARE
 static const struct pio_program receive_program = {
     .instructions = receive_program_instructions,
-    .length = 20,
+    .length = 19,
     .origin = -1,
 };
 
@@ -74,7 +73,7 @@ static inline void receive_program_init(PIO pio, uint sm, uint offset, uint pin,
     pio_gpio_init(pio, pin);
     pio_gpio_init(pio, debug_pins);
     pio_gpio_init(pio, debug_pins +1);
-    sm_config_set_clkdiv(&c, 100);
+    sm_config_set_clkdiv(&c, 1);
     pio_sm_init(pio, sm, offset, &c);
     pio_sm_set_enabled(pio, sm, true);
 }
