@@ -8,10 +8,13 @@ namespace ChristmasClock{
 ChristmasClock::ChristmasClock() :
     _led(pio0),
     _seg(_led),
-    _tx(pio0),
     _time(180)
 {
     _seg.SetGain(0x0F);
+}
+
+void ChristmasClock::Reset() {
+    _time = 180;
 }
 
 void ChristmasClock::Update() {
@@ -23,11 +26,10 @@ void ChristmasClock::Update() {
         _seg.SetForeground(ColorGRBa::RED);
     }
     _seg.SetTime(_time);
-    _tx.Transmit(_time);
     _seg.Update();
 
     _time--;
-    if(_time < -360){
+    if(_time < -1800){
         _time = 180;
     }
 }

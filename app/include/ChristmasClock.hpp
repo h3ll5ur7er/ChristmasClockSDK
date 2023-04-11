@@ -11,10 +11,11 @@ public:
     ChristmasClock();
     void Update();
 
+    void Reset();
+
 private:
     LED _led;
     SevenSeg _seg;
-    Transmitter _tx;
 
     std::time_t _time;
 };

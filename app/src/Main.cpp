@@ -29,7 +29,9 @@ int main() {
             next_update += 1000000;
         }
         sleep_ms(10);
-        recv.Receive();
+        if(recv.Receive() != -1){
+            clock.Reset();
+        }
     }
     return 0;
 }
