@@ -17,6 +17,14 @@ void ChristmasClock::Reset() {
     _time = 180;
 }
 
+std::time_t ChristmasClock::GetTime(){
+    return _time;
+}
+
+void ChristmasClock::SetTime(std::time_t time){
+    _time = time;
+}
+
 void ChristmasClock::Update() {
     if(_time > 60){
         _seg.SetForeground(ColorGRBa::GREEN);

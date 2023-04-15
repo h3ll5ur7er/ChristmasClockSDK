@@ -18,6 +18,7 @@ int main() {
     
     ChristmasClock::ChristmasClock clock;
     ChristmasClock::Receiver recv(pio1);
+    ChristmasClock::Transmitter trans(pio0);
 
     int next_update = time_us_32();
     while (true) {
@@ -27,10 +28,15 @@ int main() {
             auto tock = time_us_32();
             //std::cout << "STATS(clock.Update):" << tock-tick << std::endl;
             next_update += 1000000;
+
+            trans.Transmit(clock.GetTime());
         }
         sleep_ms(10);
-        if(recv.Receive() != -1){
+        if(recv.ReceiveNEC() >= 0){
             clock.Reset();
+        }
+        if(recv.Receive() >= 0){
+            //clock.SetTime(val);
         }
     }
     return 0;

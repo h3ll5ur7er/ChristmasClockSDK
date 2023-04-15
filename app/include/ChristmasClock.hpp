@@ -13,6 +13,9 @@ public:
 
     void Reset();
 
+    std::time_t GetTime();
+    void SetTime(std::time_t time);
+
 private:
     LED _led;
     SevenSeg _seg;
