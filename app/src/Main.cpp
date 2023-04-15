@@ -29,11 +29,12 @@ int main() {
             //std::cout << "STATS(clock.Update):" << tock-tick << std::endl;
             next_update += 1000000;
 
-            trans.Transmit(clock.GetTime());
+            //trans.Transmit(clock.GetTime());
         }
         sleep_ms(10);
         if(recv.ReceiveNEC() >= 0){
             clock.Reset();
+            next_update = time_us_32();
         }
         if(recv.Receive() >= 0){
             //clock.SetTime(val);
