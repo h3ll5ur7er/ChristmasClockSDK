@@ -2,6 +2,22 @@
 
 namespace ChristmasClock {
 
+uint32_t IRErrorCorrection::EncodeNECMessage(uint16_t data){
+    uint32_t data_tmp = (((uint32_t)data) << 8) | ((uint32_t)data);
+    data_tmp &= 0x00FF00FF;
+    return ~data_tmp | (data_tmp << 8);
+}
+
+int32_t IRErrorCorrection::DecodeNECMessage(uint32_t data){
+    uint32_t data_tmp = ~data;
+    data >>= 8;
+    data_tmp &= 0x00FF00FF;
+    data &= 0x00FF00FF;
+    int32_t err_mask = data_tmp ^ data;
+    if(err_mask != 0) err_mask = nec_error_mask;
+    return err_mask | ((data | (data >> 8)) & 0x0000FFFF);
+}
+
 uint32_t IRErrorCorrection::EncodeMessage(uint32_t data){
     data &= message_mask;
     data <<= 2;
@@ -13,7 +29,7 @@ uint32_t IRErrorCorrection::EncodeMessage(uint32_t data){
     return DifferentialEncoding(data >> 2);
 }
 
-uint32_t IRErrorCorrection::DecodeMessage(uint32_t data){
+int32_t IRErrorCorrection::DecodeMessage(uint32_t data){
     uint32_t err_mask = 0;
     data = DifferentialDecoding(data) << 2;
 
