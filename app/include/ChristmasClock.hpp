@@ -9,6 +9,7 @@ namespace ChristmasClock {
 class ChristmasClock {
 public:
     ChristmasClock();
+    void Tick();
     void Update();
 
     void Reset();
@@ -21,5 +22,6 @@ private:
     SevenSeg _seg;
 
     std::time_t _time;
+    std::time_t _countdown;
 };
 }

@@ -37,6 +37,7 @@ private:
     LED& _led;
     Bitmap _bmp;
     bool _draw_leading_zero;
+    bool _comma_drawn;
 
     ColorGRBa _foreground;
     ColorGRBa _background;
@@ -44,6 +45,7 @@ private:
     void setSegment(int number, int offsetX, ColorGRBa color);
 
     void SetPoint();
+    void SetComma();
     void SetDoublePoint();
     void ClearPoints();
 

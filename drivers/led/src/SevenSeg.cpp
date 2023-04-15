@@ -35,6 +35,7 @@ SevenSeg::SevenSeg(LED& led, ColorGRBa color, ColorGRBa background) :
     _led(led),
     _bmp(LED::SCREEN_WIDTH, LED::SCREEN_HIGHT),
     _draw_leading_zero(false),
+    _comma_drawn(false),
     _foreground(color),
     _background(background)
 {
@@ -47,13 +48,20 @@ void SevenSeg::SetTime(std::time_t t){
 
     if(t < 0){
         s = 0 -t;
-    }
-
-    if(s > 3600){
-        s /= 60;
-        SetDoublePoint();
-    } else {
-        SetPoint();
+        if(_comma_drawn){
+            SetPoint();
+            _comma_drawn = false;
+        }else{
+            SetComma();
+            _comma_drawn = true;
+        }
+    }else{
+        if(s > 3600){
+            s /= 60;
+            SetDoublePoint();
+        } else {
+            SetPoint();
+        }
     }
 
     std::time_t min = s /60;
@@ -114,6 +122,9 @@ void SevenSeg::ClearDigit(int position){
 
 void SevenSeg::SetPoint(){
     _bmp(16, 9) = _foreground;
+}
+void SevenSeg::SetComma(){
+    _bmp(16, 6) = _foreground;
 }
 void SevenSeg::SetDoublePoint(){
     _bmp(16, 6) = _foreground;
