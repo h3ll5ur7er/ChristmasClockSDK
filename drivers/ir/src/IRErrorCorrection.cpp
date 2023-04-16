@@ -21,6 +21,18 @@ int32_t IRErrorCorrection::DecodeNECMessage(uint32_t data){
     return err_mask | data;
 }
 
+int32_t IRErrorCorrection::DecodeSamsungMessage(uint32_t data){
+    uint32_t data_tmp = (~data >> 8) & 0x00FF0000;
+    data_tmp |= (data >> 8) & 0x000000FF;
+    data &= 0x00FF00FF;
+    int32_t err_mask = data_tmp ^ data;
+    if(err_mask != 0) err_mask = nec_error_mask;
+
+    data = ((data | (data << 24)) >> 16 & 0x0000FFFF);
+
+    return err_mask | data;
+}
+
 uint32_t IRErrorCorrection::EncodeMessage(uint32_t data){
     data &= message_mask;
     data <<= 2;
