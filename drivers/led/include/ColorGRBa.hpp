@@ -50,6 +50,7 @@ public:
     const static ColorGRBa GREEN;
     const static ColorGRBa BLUE;
     const static ColorGRBa YELLOW;
+    const static ColorGRBa ORANGE;
     const static ColorGRBa CYAN;
     const static ColorGRBa MAGENTA;
     const static ColorGRBa WHITE;

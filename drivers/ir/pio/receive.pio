@@ -1,0 +1,67 @@
+.program receive
+
+.wrap_target
+manchester_decoding:
+    mov x, !NULL                              
+    mov ISR, NULL                             
+    wait 0 pin 0                              
+    in PINS, 1                                
+manchester_baud_detect:
+    jmp pin manchester_baud_detected          
+    jmp x-- manchester_baud_detect            
+    jmp manchester_decoding                   
+
+manchester_baud_detected:
+    mov y, !x                                 
+
+manchester_wait_for_half_bit:
+    mov x, y                                  
+manchester_wait_for_half_bit_loop:
+    jmp x-- manchester_wait_for_half_bit_loop  [2] ; Wait 3/4 bit
+    
+    in PINS, 1                                
+
+    mov x, y                                  
+    jmp pin manchester_resync_1               
+manchester_resync_0:
+    jmp pin manchester_wait_for_half_bit      
+    jmp x-- manchester_resync_0               
+.wrap                                              ; jmp manchester_decoding
+
+manchester_resync_1:
+    jmp x-- manchester_resync_1_next               ; Wait 1/2 bit
+    jmp manchester_decoding                        ; Abort as the timeout occured
+manchester_resync_1_next:
+    jmp pin manchester_resync_1                    ; abort as the pin must be 0 here
+    jmp manchester_wait_for_half_bit          
+
+
+
+% c-sdk {
+#include "hardware/clocks.h"
+#include "stdio.h"
+#include "stdlib.h"
+
+static inline void receive_program_init(PIO pio, uint sm, uint offset, uint pin) {
+
+    pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, false);
+
+    pio_sm_config c = receive_program_get_default_config(offset);
+    sm_config_set_in_shift(
+        &c,
+        false,          // left right
+        true,           // enable autopush
+        32              // autopush after 32 bits
+    );
+    sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_RX);
+    sm_config_set_in_pins(&c, pin);
+    sm_config_set_jmp_pin(&c, pin);
+    
+    pio_gpio_init(pio, pin);
+
+    sm_config_set_clkdiv(&c, 1);
+
+    pio_sm_init(pio, sm, offset, &c);
+    pio_sm_set_enabled(pio, sm, true);
+}
+%}

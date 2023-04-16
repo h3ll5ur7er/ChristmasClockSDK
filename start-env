@@ -1,0 +1,35 @@
+#!/bin/bash
+
+cat << EOF > .$0
+
+. ~/.bashrc
+
+if [[ -e .ssh-agent.conf ]]; then
+	. .ssh-agent.conf
+else
+	if [[ -e github-id ]]; then
+		ssh-agent -s > .ssh-agent.conf
+		. .ssh-agent.conf
+		ssh-add github-id
+	fi
+fi
+
+export PICO_SDK_PATH=~/pico-sdk
+
+if [[ ! -d build ]]; then
+	mkdir build
+	cd build
+	cmake ..
+else
+	cd build
+fi
+
+EOF
+
+/bin/bash --init-file .$0 -s
+rm -f .$0
+
+AGENT_PID=`cat .ssh-agent.conf | grep SSH_AGENT_PID | awk -F= '{ print \$2 }' | awk "-F;" '{ print \$1 }'`
+kill $AGENT_PID
+rm -f .ssh-agent.conf
+

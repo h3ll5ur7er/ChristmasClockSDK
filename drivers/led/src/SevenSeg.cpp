@@ -28,13 +28,14 @@ const uint8_t SevenSeg::_seg6Y[5] = { 6, 6, 6, 6, 6 };
 const uint8_t* SevenSeg::_segmentsX[7] = { _seg0X, _seg1X, _seg2X, _seg3X, _seg4X, _seg5X, _seg6X };
 const uint8_t* SevenSeg::_segmentsY[7] = { _seg0Y, _seg1Y, _seg2Y, _seg3Y, _seg4Y, _seg5Y, _seg6Y };
 
-//                                0     1     2     3     4     5     6     7     8     9     A     b     C     d     E     F
+//                                           0     1     2     3     4     5     6     7     8     9     A     b     C     d     E     F
 const uint8_t SevenSeg::_bcdDecode[16] = { 0x7E, 0x30, 0x6D, 0x79, 0x33, 0x5B, 0x5F, 0x70, 0x7F, 0x7B, 0x77, 0x1F, 0x4E, 0x3D, 0x4F, 0x47 };
 
 SevenSeg::SevenSeg(LED& led, ColorGRBa color, ColorGRBa background) :
     _led(led),
     _bmp(LED::SCREEN_WIDTH, LED::SCREEN_HIGHT),
     _draw_leading_zero(false),
+    _comma_drawn(false),
     _foreground(color),
     _background(background)
 {
@@ -42,16 +43,34 @@ SevenSeg::SevenSeg(LED& led, ColorGRBa color, ColorGRBa background) :
 
 void SevenSeg::SetTime(std::time_t t){
     ClearPoints();
-    if(t > 3600){
-        t /= 60;
-        SetDoublePoint();
-    } else {
-        SetPoint();
+
+    auto s = t;
+
+    if(t < 0){
+        s = 0 -t;
+        if(_comma_drawn){
+            SetPoint();
+            _comma_drawn = false;
+        }else{
+            SetComma();
+            _comma_drawn = true;
+        }
+    }else{
+        if(s > 3600){
+            s /= 60;
+            SetDoublePoint();
+        } else {
+            SetPoint();
+        }
     }
 
-    std::time_t min = t /60;
-    t = t -min *60;
-    SetNumber(min *100 +t, 3);
+    std::time_t min = s /60;
+    s = s -min *60;
+    SetNumber(min *100 +s, 3);
+
+    if(t < 0 && min < 10){
+        SetNegative();
+    }
 }
 
 void SevenSeg::SetNumber(int number, int minimal){
@@ -104,14 +123,27 @@ void SevenSeg::ClearDigit(int position){
 void SevenSeg::SetPoint(){
     _bmp(16, 9) = _foreground;
 }
+void SevenSeg::SetComma(){
+    _bmp(16, 6) = _foreground;
+}
 void SevenSeg::SetDoublePoint(){
     _bmp(16, 6) = _foreground;
     _bmp(16, 9) = _foreground;
-
 }
 void SevenSeg::ClearPoints(){
     _bmp(16, 6) = _background;
     _bmp(16, 9) = _background;
+}
+
+void SevenSeg::SetNegative(){
+    _bmp(2, 6) = _foreground;
+    _bmp(3, 6) = _foreground;
+    _bmp(4, 6) = _foreground;
+}
+void SevenSeg::ClearNegative(){
+    _bmp(2, 6) = _background;
+    _bmp(3, 6) = _background;
+    _bmp(4, 6) = _background;
 }
 
 void SevenSeg::setSegment(int number, int offsetX, ColorGRBa color){

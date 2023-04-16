@@ -5,7 +5,6 @@
 #include <functional>
 
 #include "pico/stdlib.h"
-#include "pico/sem.h"
 #include "hardware/clocks.h"
 #include "hardware/dma.h"
 #include "hardware/irq.h"
