@@ -26,21 +26,19 @@ int main() {
         auto tick = time_us_32();
         if(tick >= next_tick){
             clock.Tick();
-            auto tock = time_us_32();
-            //std::cout << "STATS(clock.Update):" << tock-tick << std::endl;
             next_tick += 1000000;
 
-            //trans.Transmit(clock.GetTime());
+            trans.Transmit(clock.GetTime());
         }
         next_update--;
         if(next_update <= 0){
-            next_update = 15;
+            next_update = 20;
             clock.Update();
         }
         sleep_ms(10);
         if(recv.ReceiveNEC() >= 0){
             clock.Reset();
-            next_tick = time_us_32();
+            next_tick = time_us_32() + 1000000;
         }
         if(recv.Receive() >= 0){
             //clock.SetTime(val);
