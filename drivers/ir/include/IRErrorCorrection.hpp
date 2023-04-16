@@ -14,6 +14,7 @@ public:
 
     static uint32_t EncodeNECMessage(uint16_t data);
     static int32_t DecodeNECMessage(uint32_t data);
+    static int32_t DecodeSamsungMessage(uint32_t data);
 
     static uint32_t EncodeMessage(uint32_t data);
     static int32_t DecodeMessage(uint32_t data);

@@ -38,6 +38,10 @@ int32_t Receiver::ReceiveNEC(){
 
     auto recv = pio_sm_get(_pio, _sm_nec);
     auto ret = IRErrorCorrection::DecodeNECMessage(recv);
+
+    if(ret < 0){
+        ret = IRErrorCorrection::DecodeSamsungMessage(recv);
+    }
     
     std::cout << "Receiving NEC Data: 0x" << std::hex << std::setfill('0') << std::setw(8) << recv << " decoded to:   0x" << std::setfill('0') << std::setw(8) << ret << std::endl;
 

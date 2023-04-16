@@ -48,6 +48,9 @@ void SevenSeg::SetTime(std::time_t t){
 
     if(t < 0){
         s = 0 -t;
+        if(s > 3600){
+            s /= 60;
+        }
         if(_comma_drawn){
             SetPoint();
             _comma_drawn = false;
