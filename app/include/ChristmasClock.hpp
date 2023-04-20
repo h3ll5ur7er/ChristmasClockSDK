@@ -3,7 +3,6 @@
 #include "led.hpp"
 #include "LEDvertical.hpp"
 #include "SevenSeg.hpp"
-#include "Transmitter.hpp"
 
 namespace ChristmasClock {
 class ChristmasClock {

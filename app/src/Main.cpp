@@ -3,6 +3,7 @@
 #include "pico/stdlib.h"
 
 #include "Receiver.hpp"
+#include "Transmitter.hpp"
 
 void countdown(uint n) {
     for (uint i = 0; i < n; i++) {
@@ -11,14 +12,25 @@ void countdown(uint n) {
     }
 }
 
+void IRQCallback(const ChristmasClock::Receiver& recv){
+    std::cout << "IRQ: Manchester encoded Data received" << std::endl;
+    recv.Receive();
+}
+
+void IRQNECCallback(const ChristmasClock::Receiver& recv){
+    std::cout << "IRQ: NEC encoded Data received" << std::endl;
+}
+
 int main() {
     stdio_init_all();
 
     countdown(4);
     
     ChristmasClock::ChristmasClock clock;
-    ChristmasClock::Receiver recv(pio1);
     ChristmasClock::Transmitter trans(pio0);
+    ChristmasClock::Receiver recv(pio1);
+
+    recv.UseReceivedCallbacks(IRQCallback);
 
     int next_tick = time_us_32();
     int next_update = 0;
@@ -39,9 +51,6 @@ int main() {
         if(recv.ReceiveNEC() >= 0){
             clock.Reset();
             next_tick = time_us_32() + 1000000;
-        }
-        if(recv.Receive() >= 0){
-            //clock.SetTime(val);
         }
     }
     return 0;
