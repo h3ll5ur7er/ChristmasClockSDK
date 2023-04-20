@@ -4,8 +4,6 @@
 #include "IReceiver.hpp"
 
 #include "hardware/pio.h"
-#include <cstdint>
-#include <functional>
 
 namespace ChristmasClock {
 namespace IR{

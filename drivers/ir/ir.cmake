@@ -9,6 +9,7 @@ target_sources(${DRIVER_NAME} INTERFACE
   ${CMAKE_CURRENT_LIST_DIR}/src/Receiver.cpp
   ${CMAKE_CURRENT_LIST_DIR}/src/Transmitter.cpp
   ${CMAKE_CURRENT_LIST_DIR}/src/ErrorCorrection.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/src/NECEventMapper.cpp
 )
 
 target_include_directories(${DRIVER_NAME} INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
