@@ -1,6 +1,5 @@
 #include "ChristmasClock.hpp"
 #include "ColorGRBa.hpp"
-#include "IRErrorCorrection.hpp"
 #include <iostream>
 
 namespace ChristmasClock{

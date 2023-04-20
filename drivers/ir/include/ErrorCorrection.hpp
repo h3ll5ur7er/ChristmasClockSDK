@@ -3,7 +3,8 @@
 #include <cstdint>
 
 namespace ChristmasClock {
-class IRErrorCorrection {
+namespace IR{
+class ErrorCorrection {
 public:
     static const int max_message_bits = 24;
     static const uint32_t message_mask = 0x00FFFFFF;
@@ -31,4 +32,5 @@ private:
 
     static bool CheckParityBit0(uint32_t data);
 };
+}
 }

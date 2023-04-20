@@ -2,12 +2,13 @@
 
 #include "pico/stdlib.h"
 #include "transmit.pio.h"
-#include "IRErrorCorrection.hpp"
+#include "ErrorCorrection.hpp"
 
 #include <iostream>
 #include <iomanip>
 
 namespace ChristmasClock {
+namespace IR{
 
 Transmitter::Transmitter(PIO pio):
     _pio(pio)
@@ -21,10 +22,11 @@ bool Transmitter::Transmit(uint32_t data){
     if(pio_sm_is_tx_fifo_full(_pio, _sm)){
         return false;
     }
-    auto tmp = IRErrorCorrection::EncodeMessage(data);
+    auto tmp = ErrorCorrection::EncodeMessage(data);
     pio_sm_put(_pio, _sm, tmp);
     std::cout << "Sending Data:   0x" << std::hex << std::setfill('0') << std::setw(8) << tmp << " encoded from: 0x" << std::setfill('0') << std::setw(8) << data << std::endl;
     return true;
 }
 
+}
 }

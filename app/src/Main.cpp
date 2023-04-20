@@ -1,7 +1,9 @@
 #include "ChristmasClock.hpp"
 #include <iostream>
+#include <iomanip>
 #include "pico/stdlib.h"
 
+#include "ErrorCorrection.hpp"
 #include "Receiver.hpp"
 #include "Transmitter.hpp"
 
@@ -12,13 +14,14 @@ void countdown(uint n) {
     }
 }
 
-void IRQCallback(const ChristmasClock::Receiver& recv){
+void IRQCallback(uint32_t data){
     std::cout << "IRQ: Manchester encoded Data received" << std::endl;
-    recv.Receive();
+    std::cout << "Receiving Data: 0x" << std::hex << std::setfill('0') << std::setw(8) << data << " decoded to:   0x" << std::setfill('0') << std::setw(8) << ChristmasClock::IR::ErrorCorrection::DecodeMessage(data) << std::endl;
 }
 
-void IRQNECCallback(const ChristmasClock::Receiver& recv){
+void IRQNECCallback(uint32_t data){
     std::cout << "IRQ: NEC encoded Data received" << std::endl;
+    std::cout << "Receiving NEC Data: 0x" << std::hex << std::setfill('0') << std::setw(8) << data << " decoded to:   0x" << std::setfill('0') << std::setw(8) << ChristmasClock::IR::ErrorCorrection::DecodeNECMessage(data) << std::endl;
 }
 
 int main() {
@@ -27,10 +30,10 @@ int main() {
     countdown(4);
     
     ChristmasClock::ChristmasClock clock;
-    ChristmasClock::Transmitter trans(pio0);
-    ChristmasClock::Receiver recv(pio1);
+    ChristmasClock::IR::Transmitter trans(pio0);
+    ChristmasClock::IR::Receiver recv(pio1);
 
-    recv.UseReceivedCallbacks(IRQCallback);
+    recv.UseReceivedCallback(IRQCallback);
 
     int next_tick = time_us_32();
     int next_update = 0;

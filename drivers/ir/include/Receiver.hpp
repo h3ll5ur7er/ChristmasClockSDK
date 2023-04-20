@@ -1,24 +1,25 @@
 #pragma once
 
+#include "INECReceiver.hpp"
+#include "IReceiver.hpp"
+
 #include "hardware/pio.h"
 #include <cstdint>
 #include <functional>
 
 namespace ChristmasClock {
-class Receiver {
+namespace IR{
 
-using ReceivedIRQCallback_t = std::function<void(const Receiver&)>;
-using ReceivedIRQNECCallback_t = std::function<void(const Receiver&)>;
-
+class Receiver : public INECReceiver, public IReceiver {
 public:
     Receiver(PIO pio);
-    int32_t Receive() const;
-    int32_t ReceiveNEC() const;
+    int32_t Receive() const override;
+    int32_t ReceiveNEC() const override;
 
     uint32_t ReceiveRaw() const;
 
-    bool UseReceivedCallbacks(ReceivedIRQCallback_t callback);
-    bool UseNECReceivedCallback(ReceivedIRQNECCallback_t nec_callback);
+    bool UseReceivedCallback(ReceivedIRQCallback_t callback) override;
+    bool UseNECReceivedCallback(ReceivedIRQNECCallback_t nec_callback) override;
 
 private:
     static const int IR_PIN = 13;
@@ -36,4 +37,5 @@ private:
     static Receiver* _interrupt_handler0_class;
     static Receiver* _interrupt_handler1_class;
 };
+}
 }

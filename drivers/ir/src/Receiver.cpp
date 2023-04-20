@@ -7,12 +7,13 @@
 #include "receive.pio.h"
 #include "nec_receive.pio.h"
 
-#include "IRErrorCorrection.hpp"
+#include "ErrorCorrection.hpp"
 
 #include <iostream>
 #include <iomanip>
 
 namespace ChristmasClock {
+namespace IR{
 
 Receiver* Receiver::_interrupt_handler0_class = nullptr;
 Receiver* Receiver::_interrupt_handler1_class = nullptr;
@@ -37,7 +38,7 @@ Receiver::Receiver(PIO pio):
     }
 }
 
-bool Receiver::UseReceivedCallbacks(Receiver::ReceivedIRQCallback_t callback){
+bool Receiver::UseReceivedCallback(ReceivedIRQCallback_t callback){
     if(_sm < 0) return false;
 
     _callback = callback;
@@ -87,11 +88,11 @@ bool Receiver::RegisterAsIRQHandler(){
 
 void Receiver::IRQHandler(){
     if(_callback && !pio_sm_is_rx_fifo_empty(_pio, _sm)){
-        _callback(*this);
+        _callback(pio_sm_get(_pio, _sm));
     }
 
     if(_nec_callback && !pio_sm_is_rx_fifo_empty(_pio, _sm_nec)){
-        _nec_callback(*this);
+        _nec_callback(pio_sm_get(_pio, _sm_nec));
     }
 }
 
@@ -117,14 +118,11 @@ int32_t Receiver::ReceiveNEC() const{
     }
 
     auto recv = pio_sm_get(_pio, _sm_nec);
-    auto ret = IRErrorCorrection::DecodeNECMessage(recv);
+    auto ret = ErrorCorrection::DecodeNECMessage(recv);
 
     if(ret < 0){
-        ret = IRErrorCorrection::DecodeSamsungMessage(recv);
+        ret = ErrorCorrection::DecodeSamsungMessage(recv);
     }
-    
-    std::cout << "Receiving NEC Data: 0x" << std::hex << std::setfill('0') << std::setw(8) << recv << " decoded to:   0x" << std::setfill('0') << std::setw(8) << ret << std::endl;
-
     return ret;
 }
 
@@ -141,13 +139,9 @@ int32_t Receiver::Receive() const{
         return -1;
     }
 
-    auto recv = pio_sm_get(_pio, _sm);
-    auto ret = IRErrorCorrection::DecodeMessage(recv);
-    
-    std::cout << "Receiving Data: 0x" << std::hex << std::setfill('0') << std::setw(8) << recv << " decoded to:   0x" << std::setfill('0') << std::setw(8) << ret << std::endl;
-
-    return ret;
+    return ErrorCorrection::DecodeMessage(pio_sm_get(_pio, _sm));
 }
 
+}
 }
 
