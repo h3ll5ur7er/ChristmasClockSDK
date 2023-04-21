@@ -17,6 +17,7 @@ enum class NECEvent{
     MUTE,
     VOL_UP,
     VOL_DOWN,
+    ENTER_MENU,
     NUM_0,
     NUM_1,
     NUM_2,
