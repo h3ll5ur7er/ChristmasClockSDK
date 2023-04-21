@@ -6,6 +6,7 @@
 #include "ErrorCorrection.hpp"
 #include "Receiver.hpp"
 #include "Transmitter.hpp"
+#include "NECEventMapper.hpp"
 
 void countdown(uint n) {
     for (uint i = 0; i < n; i++) {
@@ -19,11 +20,6 @@ void IRQCallback(uint32_t data){
     std::cout << "Receiving Data: 0x" << std::hex << std::setfill('0') << std::setw(8) << data << " decoded to:   0x" << std::setfill('0') << std::setw(8) << ChristmasClock::IR::ErrorCorrection::DecodeMessage(data) << std::endl;
 }
 
-void IRQNECCallback(uint32_t data){
-    std::cout << "IRQ: NEC encoded Data received" << std::endl;
-    std::cout << "Receiving NEC Data: 0x" << std::hex << std::setfill('0') << std::setw(8) << data << " decoded to:   0x" << std::setfill('0') << std::setw(8) << ChristmasClock::IR::ErrorCorrection::DecodeNECMessage(data) << std::endl;
-}
-
 int main() {
     stdio_init_all();
 
@@ -32,6 +28,8 @@ int main() {
     ChristmasClock::ChristmasClock clock;
     ChristmasClock::IR::Transmitter trans(pio0);
     ChristmasClock::IR::Receiver recv(pio1);
+
+    ChristmasClock::IR::NECEventMapper mapper(recv);
 
     recv.UseReceivedCallback(IRQCallback);
 
@@ -51,9 +49,10 @@ int main() {
             clock.Update();
         }
         sleep_ms(10);
-        if(recv.ReceiveNEC() >= 0){
+        if(auto event = mapper.GetEvent(); event != ChristmasClock::IR::NECEvent::NO_EVENT){
             clock.Reset();
             next_tick = time_us_32() + 1000000;
+            std::cout << "New NEC Event: " << event << std::endl;
         }
     }
     return 0;

@@ -30,6 +30,34 @@ NECEvent NECEventMapper::GetEvent() const{
     return NECEvent::UNKNOWN;
 }
 
+/// Macro that prints the case name to the stream.
+#define PRINT_ENUM_IN_SWITCH_CASE(name) \
+  case NECEvent::name: \
+    stream << #name; \
+    break
+
+std::ostream& operator<<(std::ostream& stream, const NECEvent &event) {
+    switch(event){
+        PRINT_ENUM_IN_SWITCH_CASE(NO_EVENT);
+        PRINT_ENUM_IN_SWITCH_CASE(UNKNOWN);
+        PRINT_ENUM_IN_SWITCH_CASE(ON_OFF);
+        PRINT_ENUM_IN_SWITCH_CASE(MUTE);
+        PRINT_ENUM_IN_SWITCH_CASE(NUM_0);
+        PRINT_ENUM_IN_SWITCH_CASE(NUM_1);
+        PRINT_ENUM_IN_SWITCH_CASE(NUM_2);
+        PRINT_ENUM_IN_SWITCH_CASE(NUM_3);
+        PRINT_ENUM_IN_SWITCH_CASE(NUM_4);
+        PRINT_ENUM_IN_SWITCH_CASE(NUM_5);
+        PRINT_ENUM_IN_SWITCH_CASE(NUM_6);
+        PRINT_ENUM_IN_SWITCH_CASE(NUM_7);
+        PRINT_ENUM_IN_SWITCH_CASE(NUM_8);
+        PRINT_ENUM_IN_SWITCH_CASE(NUM_9);
+        default:
+            stream << "Unknown NECEvent: " + std::to_string(static_cast<int>(event));
+    }
+    return stream;
+}
+
 void NECEventMapper::addTerratecCodes(std::map<uint16_t, NECEvent>& lookup){
    lookup[0x140c] = NECEvent::NUM_0;
    lookup[0x1402] = NECEvent::NUM_1;

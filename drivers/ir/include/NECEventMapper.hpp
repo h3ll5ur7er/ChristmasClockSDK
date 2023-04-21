@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <queue>
 #include <map>
+#include <ostream>
 
 namespace ChristmasClock {
 namespace IR{
@@ -25,6 +26,8 @@ enum class NECEvent{
     NUM_8,
     NUM_9,
 };
+
+std::ostream& operator<<(std::ostream& stream, const NECEvent &event);
 
 class NECEventMapper {
 public:
