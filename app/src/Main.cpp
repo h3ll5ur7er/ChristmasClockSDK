@@ -50,9 +50,10 @@ int main() {
         }
         sleep_ms(10);
         if(auto event = mapper.GetEvent(); event != ChristmasClock::IR::NECEvent::NO_EVENT){
-            clock.Reset();
-            next_tick = time_us_32() + 1000000;
-            std::cout << "New NEC Event: " << event << std::endl;
+            if(clock.EvaluateEvent(event)){
+                next_tick = time_us_32() + 1000000;
+                std::cout << "New NEC Event: " << event << std::endl;
+            }
         }
     }
     return 0;

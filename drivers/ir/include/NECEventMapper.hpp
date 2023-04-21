@@ -15,6 +15,8 @@ enum class NECEvent{
     UNKNOWN,
     ON_OFF,
     MUTE,
+    VOL_UP,
+    VOL_DOWN,
     NUM_0,
     NUM_1,
     NUM_2,

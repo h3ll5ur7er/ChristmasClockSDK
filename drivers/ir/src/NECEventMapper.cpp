@@ -71,6 +71,8 @@ void NECEventMapper::addTerratecCodes(std::map<uint16_t, NECEvent>& lookup){
    lookup[0x140a] = NECEvent::NUM_9;
    lookup[0x1401] = NECEvent::ON_OFF;
    lookup[0x141d] = NECEvent::MUTE;
+   lookup[0x141c] = NECEvent::VOL_UP;
+   lookup[0x141e] = NECEvent::VOL_DOWN;
 }
 void NECEventMapper::addDVBTCodes(std::map<uint16_t, NECEvent>& lookup){
    lookup[0x0012] = NECEvent::NUM_0;
@@ -85,6 +87,8 @@ void NECEventMapper::addDVBTCodes(std::map<uint16_t, NECEvent>& lookup){
    lookup[0x0017] = NECEvent::NUM_9;
    lookup[0x004d] = NECEvent::ON_OFF;
    lookup[0x0016] = NECEvent::MUTE;
+   lookup[0x001e] = NECEvent::VOL_UP;
+   lookup[0x000a] = NECEvent::VOL_DOWN;
 }
 void NECEventMapper::addSamsungCodes(std::map<uint16_t, NECEvent>& lookup){
    lookup[0x0711] = NECEvent::NUM_0;
