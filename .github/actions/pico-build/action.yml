@@ -1,0 +1,17 @@
+name: Build Pico
+description: Build pico executable
+
+inputs:
+  executable:
+    description: 'Name of the executable'
+    required: true
+    default: 'pico'
+outputs:
+  binary:
+    description: 'Base64 encoded binary'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.executable }}
