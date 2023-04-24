@@ -1,6 +1,12 @@
 name: Build pico binary
 
-on: [push, pull_request] # TODO: specify branches
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:
@@ -12,13 +18,9 @@ jobs:
     - name: Building pico binary
       id: pico
       uses: ./.github/actions/pico-build
-      with:
-        executable: 'app/ChristmasClock.uf2'
 
-    - name: Upload artefacts
+    - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: ChristmasClock
-        path: ${{github.workspace}}/build/app/ChristmasClock.*
-      # Use always() to always run this step to publish test results when there are test failures
-      if: ${{ always() }}
+        name: Artifacts
+        path: ${{github.workspace}}/build/**/*.uf2

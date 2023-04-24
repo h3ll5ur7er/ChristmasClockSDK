@@ -23,5 +23,4 @@ ENV PICO_SDK_PATH=$SDK_PATH
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-RUN ls /
 ENTRYPOINT sh /entrypoint.sh
