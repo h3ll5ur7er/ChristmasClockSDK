@@ -1,8 +1,12 @@
 #include "ChristmasClock.hpp"
 #include <iostream>
+#include <iomanip>
 #include "pico/stdlib.h"
 
+#include "ErrorCorrection.hpp"
 #include "Receiver.hpp"
+#include "Transmitter.hpp"
+#include "NECEventMapper.hpp"
 
 void countdown(uint n) {
     for (uint i = 0; i < n; i++) {
@@ -11,14 +15,23 @@ void countdown(uint n) {
     }
 }
 
+void IRQCallback(uint32_t data){
+    std::cout << "IRQ: Manchester encoded Data received" << std::endl;
+    std::cout << "Receiving Data: 0x" << std::hex << std::setfill('0') << std::setw(8) << data << " decoded to:   0x" << std::setfill('0') << std::setw(8) << ChristmasClock::IR::ErrorCorrection::DecodeMessage(data) << std::endl;
+}
+
 int main() {
     stdio_init_all();
 
     countdown(4);
     
     ChristmasClock::ChristmasClock clock;
-    ChristmasClock::Receiver recv(pio1);
-    ChristmasClock::Transmitter trans(pio0);
+    ChristmasClock::IR::Transmitter trans(pio0);
+    ChristmasClock::IR::Receiver recv(pio1);
+
+    ChristmasClock::IR::NECEventMapper mapper(recv);
+
+    recv.UseReceivedCallback(IRQCallback);
 
     int next_tick = time_us_32();
     int next_update = 0;
@@ -36,12 +49,11 @@ int main() {
             clock.Update();
         }
         sleep_ms(10);
-        if(recv.ReceiveNEC() >= 0){
-            clock.Reset();
-            next_tick = time_us_32() + 1000000;
-        }
-        if(recv.Receive() >= 0){
-            //clock.SetTime(val);
+        if(auto event = mapper.GetEvent(); event != ChristmasClock::IR::NECEvent::NO_EVENT){
+            if(clock.EvaluateEvent(event)){
+                next_tick = time_us_32() + 1000000;
+                std::cout << "New NEC Event: " << event << std::endl;
+            }
         }
     }
     return 0;

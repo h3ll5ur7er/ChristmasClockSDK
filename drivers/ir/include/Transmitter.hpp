@@ -4,6 +4,7 @@
 #include <cstdint>
 
 namespace ChristmasClock {
+namespace IR{
 class Transmitter {
 public:
     Transmitter(PIO pio);
@@ -15,4 +16,5 @@ private:
     PIO _pio;
     int _sm;
 };
+}
 }

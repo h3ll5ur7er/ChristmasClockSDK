@@ -1,15 +1,16 @@
-#include "IRErrorCorrection.hpp"
+#include "ErrorCorrection.hpp"
 
 namespace ChristmasClock {
+namespace IR{
 
-uint32_t IRErrorCorrection::EncodeNECMessage(uint16_t data){
+uint32_t ErrorCorrection::EncodeNECMessage(uint16_t data){
     //TODO: Address & Data are not handled in the correct order...
     uint32_t data_tmp = (((uint32_t)data) << 8) | ((uint32_t)data);
     data_tmp &= 0x00FF00FF;
     return ~data_tmp | (data_tmp << 8);
 }
 
-int32_t IRErrorCorrection::DecodeNECMessage(uint32_t data){
+int32_t ErrorCorrection::DecodeNECMessage(uint32_t data){
     uint32_t data_tmp = ~data >> 8;
     data_tmp &= 0x00FF00FF;
     data &= 0x00FF00FF;
@@ -21,7 +22,7 @@ int32_t IRErrorCorrection::DecodeNECMessage(uint32_t data){
     return err_mask | data;
 }
 
-int32_t IRErrorCorrection::DecodeSamsungMessage(uint32_t data){
+int32_t ErrorCorrection::DecodeSamsungMessage(uint32_t data){
     uint32_t data_tmp = (~data >> 8) & 0x00FF0000;
     data_tmp |= (data >> 8) & 0x000000FF;
     data &= 0x00FF00FF;
@@ -33,7 +34,7 @@ int32_t IRErrorCorrection::DecodeSamsungMessage(uint32_t data){
     return err_mask | data;
 }
 
-uint32_t IRErrorCorrection::EncodeMessage(uint32_t data){
+uint32_t ErrorCorrection::EncodeMessage(uint32_t data){
     data &= message_mask;
     data <<= 2;
 
@@ -44,7 +45,7 @@ uint32_t IRErrorCorrection::EncodeMessage(uint32_t data){
     return DifferentialEncoding(data >> 2);
 }
 
-int32_t IRErrorCorrection::DecodeMessage(uint32_t data){
+int32_t ErrorCorrection::DecodeMessage(uint32_t data){
     uint32_t err_mask = 0;
     data = DifferentialDecoding(data) << 2;
 
@@ -57,7 +58,7 @@ int32_t IRErrorCorrection::DecodeMessage(uint32_t data){
     return ((data >> 2) & message_mask) | err_mask;
 }
 
-bool IRErrorCorrection::CheckParityBit0(uint32_t data){
+bool ErrorCorrection::CheckParityBit0(uint32_t data){
     auto tmp = data ^ (data << 16);
     tmp ^= (tmp << 8);
     tmp ^= (tmp << 4);
@@ -67,7 +68,7 @@ bool IRErrorCorrection::CheckParityBit0(uint32_t data){
     return (tmp & 0x80000000) == 0;
 }
 
-uint32_t IRErrorCorrection::AddParityBit0(uint32_t data){
+uint32_t ErrorCorrection::AddParityBit0(uint32_t data){
     auto tmp = data ^ (data << 16);
     tmp ^= (tmp << 8);
     tmp ^= (tmp << 4);
@@ -77,7 +78,7 @@ uint32_t IRErrorCorrection::AddParityBit0(uint32_t data){
     return data | (tmp & 0x80000000);
 }
 
-uint32_t IRErrorCorrection::AddParityBits(uint32_t data){
+uint32_t ErrorCorrection::AddParityBits(uint32_t data){
     auto h1 = data ^ (data << 8);
     auto h2 = h1 ^ (h1 >> 16);
     auto h3 = (h2 ^ ((data >> 16) & 0x000000FF)) & 0x00FFFFFF;
@@ -99,21 +100,21 @@ uint32_t IRErrorCorrection::AddParityBits(uint32_t data){
 }
 
 
-uint32_t IRErrorCorrection::DisperseDatabits(uint32_t data){
+uint32_t ErrorCorrection::DisperseDatabits(uint32_t data){
     return data      & 0x00007FFC
          | data << 1 & 0x007F0000
          | data << 2 & 0x07000000
          | data << 3 & 0x10000000;
 }
 
-uint32_t IRErrorCorrection::CollectDatabits(uint32_t data){
+uint32_t ErrorCorrection::CollectDatabits(uint32_t data){
     return  data & 0x00007FFC
          | (data & 0x007F0000) >> 1
          | (data & 0x07000000) >> 2
          | (data & 0x10000000) >> 3;
 }
 
-uint32_t IRErrorCorrection::DifferentialEncoding(uint32_t data){
+uint32_t ErrorCorrection::DifferentialEncoding(uint32_t data){
     //                                     0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15
     static const uint8_t start_zero[] = {  0,  1,  3,  2,  7,  6,  4,  5, 15, 14, 12, 13,  8,  9, 11, 10 };
     //static const uint8_t start_one[]  = { 15, 14, 12, 13,  8,  9, 11, 10,  0,  1,  3,  2,  7,  6,  4,  5 };
@@ -130,7 +131,7 @@ uint32_t IRErrorCorrection::DifferentialEncoding(uint32_t data){
 }
 
 // An alternative Method to adchieve the same without addition but it takes 4 more commands for some reason
-//uint32_t IRErrorCorrection::DifferentialEncoding_new(uint32_t data){
+//uint32_t ErrorCorrection::DifferentialEncoding_new(uint32_t data){
 //    //                                     0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15
 //    static const uint8_t start_zero[] = { /* last bit in stream was 0: */
 //                                           0,  1,  3,  2,  7,  6,  4,  5, 15, 14, 12, 13,  8,  9, 11, 10,
@@ -147,7 +148,7 @@ uint32_t IRErrorCorrection::DifferentialEncoding(uint32_t data){
 //    return output;
 //}
 
-uint32_t IRErrorCorrection::DifferentialDecoding(uint32_t data){
+uint32_t ErrorCorrection::DifferentialDecoding(uint32_t data){
     //                                     0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15
     static const uint8_t start_zero[] = { /* last bit in stream was 0: */
                                            0,  1,  3,  2,  6,  7,  5,  4, 12, 13, 15, 14, 10, 11,  9,  8,
@@ -165,7 +166,7 @@ uint32_t IRErrorCorrection::DifferentialDecoding(uint32_t data){
 }
 
 // An alternative method to adchieve the same thing
-//uint32_t IRErrorCorrection::DifferentialDecoding(uint32_t data){
+//uint32_t ErrorCorrection::DifferentialDecoding(uint32_t data){
 //    //                                     0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15
 //    static const uint8_t start_zero[] = {  0,  1,  3,  2,  6,  7,  5,  4, 12, 13, 15, 14, 10, 11,  9,  8 };
 //    static const uint8_t start_one[]  = {  8,  9, 11, 10, 14, 15, 13, 12,  4,  5,  7,  6,  2,  3,  1,  0 };
@@ -184,4 +185,5 @@ uint32_t IRErrorCorrection::DifferentialDecoding(uint32_t data){
 //    return output;
 //}
 
+}
 }
