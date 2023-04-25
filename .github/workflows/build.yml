@@ -1,0 +1,26 @@
+name: Build pico binary
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checking out repository 
+      uses: actions/checkout@v3
+
+    - name: Building pico binary
+      id: pico
+      uses: ./.github/actions/pico-build
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: Artifacts
+        path: ${{github.workspace}}/build/**/*.uf2

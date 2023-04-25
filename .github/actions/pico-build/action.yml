@@ -1,0 +1,6 @@
+name: Build Pico
+description: Build pico executable
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
